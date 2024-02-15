@@ -19,9 +19,9 @@ from src.consts import (FloorsTypes, GAME_HEIGHT, GAME_WIDTH, STATS_HEIGHT, ROOM
 
 def start_game(main_screen):
     """
-    Стартовое меню.
+     Menu de inicio.
 
-    :param main_screen: полотно, на котором нужно нарисовать.
+     :param main_screen: lienzo sobre el que dibujar.
     """
     pg.display.set_caption("The Binding of Isaac: Python")
     pg.display.set_icon(load_image("images/icon/64x64.ico"))
@@ -30,13 +30,12 @@ def start_game(main_screen):
     return startscrean.start_screen(main_screen)
 
 
-# Заглушка (переделать!)
 class Game(BaseGame):
     """
-    Класс игры.
+    Clase del juego.
 
-    :param name: имя персонажа
-    :param main_screen: полотно, на котором нужно нарисовать.
+    :param name: nombre del personaje
+    :param main_screen: lienzo principal en el que se dibujará.
     """
     def __init__(self, name: str, main_screen: pg.Surface, fps: int = 60):
         self.name_hero = name
@@ -54,7 +53,7 @@ class Game(BaseGame):
 
     def setup(self):
         """
-        Регистрация событий.
+        Registro de eventos.
         """
         self.register_event(pg.KEYDOWN, self.main_hero_handler.keyboard_handler)
         self.register_event(pg.KEYDOWN, self.switch_pause)
@@ -74,18 +73,18 @@ class Game(BaseGame):
 
     def end_screen(self, event: pg.event.Event):
         """
-        Конечное окно.
+        Ventana de fin.
 
-        :param event: нажатая кнопка
+        :param event: tecla presionada
         """
         self.running = False
         end_screen(self.main_screen, self.name_hero, self.main_hero.score)
 
     def switch_pause(self, event: pg.event.Event):
         """
-        Пауза.
+        Pausa.
 
-        :param event: нажатая кнопка
+        :param event: tecla presionada
         """
         if event.key == pg.K_ESCAPE:
             self.main_hero.reset_speed()
@@ -94,15 +93,15 @@ class Game(BaseGame):
 
     def get_current_level_rooms(self) -> list[list[Room | None]]:
         """
-        Получить все комнаты текущего этажа.
+        Obtener todas las habitaciones del nivel actual.
 
-        :return: Двумерный массив комнат.
+        :return: Una lista bidimensional de habitaciones.
         """
         return self.current_level.get_rooms()
 
     def move_to_next_level(self, *args):
         """
-        Переход на следующий этаж.
+        Transición al siguiente nivel.
         """
         if self.current_level.floor_type == FloorsTypes.WOMB:
             if win(self.main_screen, score=self.main_hero.score):
@@ -115,9 +114,9 @@ class Game(BaseGame):
 
     def move_to_next_room(self, event: pg.event.Event):
         """
-        Переход в другую комнату.
+        Permite al personaje moverse a otra habitación.
 
-        :param event: Ивент, который имеет direction (вызывается дверью).
+        :param event: Evento que contiene la dirección (activado/causado por una puerta).
         """
         self.main_hero.kill_tears()
         self.current_level.move_to_next_room(event.direction)
@@ -128,26 +127,26 @@ class Game(BaseGame):
 
     def move_main_hero(self, xy_pos: tuple[int, int]):
         """
-        Передвинуть главного героя по координатам.
+        Mueve al héroe principal a las coordenadas especificadas.
 
-        :param xy_pos: Координаты центра.
+        :param xy_pos: Coordenadas del centro (coordenadas centrales).
         """
         self.main_hero.move_to_cell(xy_pos)
 
     def update_stats(self, event: pg.event.Event = None):
         """
-        Обновление мини-карты и статов героя.
+        Actualiza el minimapa y las estadísticas del héroe.
 
-        :param event: нажатая кнопка
+        :param event: evento de tecla presionada
         """
         self.stats.update_minimap()
         self.stats.update_hero_stats()
 
     def kill_all(self, event: pg.event.Event):
         """
-        Убийство всех. По сути - встроенные читы.
+        Eliminar a todos. Básicamente, trucos incorporados.
 
-        :param event: нажатая кнопка
+        :param event: tecla presionada
         """
         if event.key == pg.K_r:
             for enemy in self.current_level.current_room.enemies.sprites():
@@ -159,18 +158,18 @@ class Game(BaseGame):
 
     def set_bomb(self, event: pg.event.Event):
         """
-        Активация бомбы.
+        Activación de la bomba.
 
-        :param event: нажатая кнопка
+        :param event: tecla presionada
         """
         if event.type == USE_BOMB:
             self.current_level.current_room.set_bomb(event)
 
     def update(self, delta_t: float):
         """
-        Обновление.
+        Actualización.
 
-        :param delta_t: время с прошлого обновления.
+        :param delta_t: tiempo desde la última actualización.
         """
         if self.is_paused:
             self.is_paused = False
@@ -180,9 +179,9 @@ class Game(BaseGame):
 
     def draw(self, screen: pg.Surface):
         """
-        Отрисовка всего.
+        Renderizar todo.
 
-        :param screen: полотно, на котором надо отрисовать.
+        :param screen: superficie en la que se va a renderizar.
         """
         self.stats.render(self.main_screen)
         self.current_level.render(self.level_screen)
