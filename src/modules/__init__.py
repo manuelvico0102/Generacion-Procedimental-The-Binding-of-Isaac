@@ -1,3 +1,3 @@
 """
-Модули для игры.
+Módulos para el juego.
 """
