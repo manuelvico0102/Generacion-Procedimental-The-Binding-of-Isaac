@@ -1,3 +1,3 @@
 """
-Главные персонажи (за которых можно играть).
+Personajes principales (jugables).
 """

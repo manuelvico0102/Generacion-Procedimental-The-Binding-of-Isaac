@@ -12,7 +12,7 @@ from src.modules.BaseClasses.Based.BaseTear import BaseTear
 
 class TexturesHeroes:
     """
-    Класс текстур для героя.
+    Clase de texturas para el héroe.
     """
     textures: dict[str, dict] = {
         name:
@@ -35,18 +35,18 @@ class TexturesHeroes:
 
 class ParamsHeroes(TexturesHeroes):
     """
-    Класс настроек ГГ.
+    Clase de configuración del personaje principal.
     """
-    settings_body: list[int] = [pg.K_a, pg.K_d, pg.K_w, pg.K_s]                # настройки движения ГГ
-    # settings_head: list[int] = [pg.K_KP_4, pg.K_KP_6, pg.K_KP_8, pg.K_KP_5]    # настройки поворота головы
-    settings_head: list[int] = [pg.K_LEFT, pg.K_RIGHT, pg.K_UP, pg.K_DOWN]    # настройки поворота головы
+    settings_body: list[int] = [pg.K_a, pg.K_d, pg.K_w, pg.K_s]                # Configuración de movimiento del héroe
+    # settings_head: list[int] = [pg.K_KP_4, pg.K_KP_6, pg.K_KP_8, pg.K_KP_5]    # ajustes de rotación de la cabeza
+    settings_head: list[int] = [pg.K_LEFT, pg.K_RIGHT, pg.K_UP, pg.K_DOWN]    # ajustes de rotación de la cabeza
 
     directions_head = {settings_head[0]: "LEFT",
                        settings_head[1]: "RIGHT",
                        settings_head[2]: "UP",
                        settings_head[3]: "DOWN"}
-    body_images_dict: dict | None  # Словарь текстурок движения тела. Ключ - Направление, значение - список изображений.
-    head_images_dict: dict | None  # Словарь текстурок поворота головы. Ключ - Направление, значение - изображение.
+    body_images_dict: dict | None  # Diccionario de texturas de movimiento del cuerpo. Clave: Dirección, Valor: Lista de imágenes.
+    head_images_dict: dict | None  # Diccionario de texturas de rotación de la cabeza. Clave - Dirección, Valor - Imagen.
     characterizations: dict[str, dict] = {
         'isaac': {
             'hp': 6,
@@ -69,32 +69,32 @@ class ParamsHeroes(TexturesHeroes):
             'is_flying': True,
             'offset': 18
         }
-    }     # Словарь базовых характеристик персонажей. Ключ - имя персонажа
+    }     # Diccionario de características base de los personajes. Clave - nombre del personaje
 
     def set_images(self, name: str):
         """
-        Настройка изображений героя, в зависимости от его имени.
+        Configuración de las imágenes del héroe, según su nombre.
 
-        :param name: имя ГГ.
+        :param name: nombre del héroe.
         """
         self.body_images_dict = self.textures[name]['body']
         self.head_images_dict = self.textures[name]['head']
 
     def get_characters(self, name: str):
         """
-        Выдача начальных характеристик героя, в зависимости от его имени.
+        Devuelve las características iniciales del héroe, según su nombre.
 
-        :param name: имя ГГ.
-        :return: список хп, скорость, урон, летающий/не летающий, смещение головы по оси 0y относительно тела
+        :param name: nombre del héroe.
+        :return: lista de puntos de vida, velocidad, daño, si puede volar o no, y desplazamiento de la cabeza en el eje 0y con respecto al cuerpo.
         """
         return self.characterizations[name].values()
 
     def set_move_params(self, body: list[int], head: list[int]):
         """
-        Настройка управления (боди - ходьба, хед - стрельба).
+        Configuración de control (cuerpo - movimiento, cabeza - disparo).
 
-        :param body: настройки передвижения (тело).
-        :param head: настройки поворота головы.
+        :param body: configuración de movimiento del cuerpo.
+        :param head: configuración de rotación de la cabeza.
         """
         self.settings_body = body
         self.settings_head = head
@@ -102,11 +102,11 @@ class ParamsHeroes(TexturesHeroes):
 
 class Head(pg.sprite.Sprite):
     """
-    Класс головы персонажа.
+    Clase de la cabeza del personaje.
 
-    :param shot_damage: настройки передвижения(тело).
-    :param tears: слёзы.
-    :param params: настройки поворота, изображения.
+    :param shot_damage: daño del disparo.
+    :param tears: lágrimas.
+    :param params: parámetros de configuración de rotación e imágenes.
     """
     shot_max_distance: int | float = 5
     shot_speed: int | float = 5
@@ -119,19 +119,19 @@ class Head(pg.sprite.Sprite):
                  params: ParamsHeroes):
         super().__init__()
 
-        self.shot_ticks: float = 0                           # время с прошлого выстрела
-        self.shot_damage: float = shot_damage                # урон
-        self.vx_tear: float = 0                              # скорость слезы по оси 0x
-        self.vy_tear: float = 0                              # скорость слезы по оси 0y
-        self.player_speed: tuple[float, float] = 0, 0        # текущая скорость персонажа(для отклонения пули при беге)
+        self.shot_ticks: float = 0                           # tiempo desde el último disparo
+        self.shot_damage: float = shot_damage                # daño del disparo
+        self.vx_tear: float = 0                              # velocidad de la lagrima a lo largo del eje 0x
+        self.vy_tear: float = 0                              # velocidad de la lagrima a lo largo del eje 0y
+        self.player_speed: tuple[float, float] = 0, 0        # velocidad actual del personaje (para desviar una bala cuando corre)
 
         self.tears = tears
         self.tear_class: Type[BaseTear] = HeroTear
 
-        self.is_rotated = False   # повёрнута ли голова
+        self.is_rotated = False   # indica si la cabeza está girada
 
-        self.last_name_direction: str = "DOWN"      # последнее направление головы (по сути, последняя нажатая кнопка)
-        self.on_directions: list[str, ...] = []     # список активных направлений (по сути, список нажатых кнопок)
+        self.last_name_direction: str = "DOWN"      # última dirección de la cabeza (básicamente, el último botón presionado)
+        self.on_directions: list[str, ...] = []     # lista de direcciones activas (esencialmente, una lista de botones presionados)
 
         self.params_hero = params
         self.image = self.params_hero.head_images_dict["DOWN"]
@@ -139,41 +139,41 @@ class Head(pg.sprite.Sprite):
 
     def set_tear_collide_groups(self, tear_collide_groups: tuple[pg.sprite.AbstractGroup, ...]):
         """
-        Настройка групп, в которые может врезаться слеза.
+        Establece de los grupos en los que la lágrima puede colisionar.
 
-        :param tear_collide_groups: кортеж групп, в которые может врезаться слеза.
+        :param tear_collide_groups: tupla de grupos en los que la lágrima puede colisionar.
         """
         self.tear_collide_groups = tear_collide_groups
 
     def settings_vx_vy_tear(self):
         """
-        Настройки скоростей слезы.
+        Configuración de la velocidad de la lágrima.
         """
         if self.is_rotated:
             if self.last_name_direction in ["LEFT", "RIGHT"]:
                 self.vx_tear = self.shot_speed if self.last_name_direction == "RIGHT" else -self.shot_speed
                 # if self.player_speed[1] != 0:
-                self.vy_tear += self.player_speed[1] * 0.3  # константа выведена практически
+                self.vy_tear += self.player_speed[1] * 0.3  # constante obtenida empíricamente
             elif self.last_name_direction in ["UP", "DOWN"]:
                 self.vy_tear = self.shot_speed if self.last_name_direction == "DOWN" else -self.shot_speed
                 # if self.player_speed[0] != 0:
-                self.vx_tear += self.player_speed[0] * 0.3  # константа выведена практически
+                self.vx_tear += self.player_speed[0] * 0.3  # constante obtenida empíricamente
 
     def set_player_speed(self, vx: int | float, vy: int | float):
         """
-        Сохранение(не изменяет!) скорости персонажа(нужно для отклонения пули при движении).
-
-        :param vx: скорость по оси 0x.
-        :param vy: скорость по оси 0y.
+        Guarda (¡no cambia!) la velocidad del personaje (necesaria para desviar una bala cuando se mueve).
+        
+        :param vx: velocidad en el eje 0x.
+        :param vy: velocidad en el eje 0y.
         """
         self.vy_tear, self.vx_tear = 0, 0
         self.player_speed = vx, vy
 
     def update(self, delta_t) -> None:
         """
-        Обновление кадра.
+        Actualización del fotograma.
 
-        :param delta_t: время с прошлого кадра.
+        :param delta_t: tiempo desde el último fotograma.
         """
         self.shot_ticks += delta_t
         if self.shot_ticks >= self.shot_delay and self.is_rotated:
@@ -182,7 +182,7 @@ class Head(pg.sprite.Sprite):
 
     def shot(self) -> None:
         """
-        Стрельба.
+        Disparo.
         """
         self.shot_ticks = 0
         self.settings_vx_vy_tear()
@@ -199,28 +199,28 @@ class Head(pg.sprite.Sprite):
 
     def animating(self):
         """
-        Поворот головы.
+        Rotación de la cabeza.
         """
         self.image = self.params_hero.head_images_dict[self.last_name_direction]
 
     def draw_tears(self, screen: pg.Surface):
         """
-        Рисовка слёз.
+        Dibujo de las lágrimas.
         """
         self.tears.draw(screen)
 
 
 class Player(MoveSprite):
     """
-    Класс ГГ.
+    Clase del personaje principal.
 
-    :param name: имя выбранного персонажа.
+    :param name: nombre del personaje seleccionado.
     """
     death: pg.Surface | None = None
-    death_sound = load_sound("sounds/isaac_death2.mp3")  # перенести
+    death_sound = load_sound("sounds/isaac_death2.mp3")  # mover
     hurt_sounds: list[pg.mixer.Sound] = [load_sound(f"sounds/isaac_hurt{i}.mp3") for i in range(1, 4)]
 
-    a: float = 0.35  # Ускорение. Выведено практически
+    a: float = 0.35  # Aceleración. Determinada empíricamente
 
     def __init__(self, name: str):
 
@@ -230,67 +230,67 @@ class Player(MoveSprite):
         self.params_hero.set_images(name)
         self.death = self.params_hero.body_images_dict['death']
 
-        self.indexes = {"DOWN": 0, "LEFT": 0, "RIGHT": 0, "UP": 0}  # кол-во кадров, прошедших в определённую сторону
+        self.indexes = {"DOWN": 0, "LEFT": 0, "RIGHT": 0, "UP": 0}  # cantidad de cuadros/fotogramas transcurridos en cada dirección
 
-        self.tears = pg.sprite.Group()  # слёзы
+        self.tears = pg.sprite.Group()  # lagrimas
         self.max_red_hp, self.max_speed, damage, self.is_flying, self.offset = self.params_hero.get_characters(name)
-        self.head = Head(damage, self.tears, self.params_hero)  # голова персонажа
+        self.head = Head(damage, self.tears, self.params_hero)  # cabeza del personaje
 
-        self.collide_groups: tuple[pg.sprite.AbstractGroup, ...] | None = None  # группы, в которые может врезаться ГГ
+        self.collide_groups: tuple[pg.sprite.AbstractGroup, ...] | None = None  # Grupos con los que el personaje principal puede chocar.
         self.player_sprites = pg.sprite.LayeredUpdates()
         self.player_sprites.add(self, layer=1)
         self.player_sprites.add(self.head, layer=2)
 
-        # разное
-        self.damage_from_blow: int = 1                  # урон от бомбы самому себе
-        self.count_cadrs: int = 0                       # кол-во прошедших кадров (нужно для анимации)
-        self.score: int = 0                             # кол-во очков
+        # variables varias
+        self.damage_from_blow: int = 1                  # daño de la explosión a sí mismo
+        self.count_cadrs: int = 0                       # cantidad de cuadros/fotogramas transcurridos (para animación)
+        self.score: int = 0                             # cantidad de puntos
 
-        # здоровье
-        self.red_hp: int = self.max_red_hp              # кол-во красных хп(половинки сердца)
-        self.blue_hp: int = 0                           # аналогично красным, только синие
-        self.black_hp: int = 0                          # аналогично красным, только чёрные
+        # variables de vida
+        self.red_hp: int = self.max_red_hp              # número de HP rojos (mitades de corazón)
+        self.blue_hp: int = 0                           # similar al rojo, solo azul
+        self.black_hp: int = 0                          # similar al rojo, solo negro
 
-        self.count_bombs: int = 3                       # кол-во бомб
-        self.count_key: int = 0                         # кол-во ключей
-        self.count_money: int = 10                       # кол-во монет
+        self.count_bombs: int = 3                       # número de bombas
+        self.count_key: int = 0                         # numero de llaves
+        self.count_money: int = 10                       # número de monedas/dinero
 
-        # таймеры
-        self.use_bombs_delay: int | float = 1           # интервал между активациями бомб
-        self.use_bombs_ticks: float = 0                 # время с прошлой активации бомбы
-        self.timer_hurt: float = 2                      # интервал между получением урона
-        self.timer: float = 2                           # время с прошлого получения урона
-        self.score_sub_tick: float = 1                  # интервал снятия очков
-        self.score_sub_timer: float = 0                 # время с прошлого снятия очков
+        # temporizadores
+        self.use_bombs_delay: int | float = 1           # intervalo entre activaciones de bombas
+        self.use_bombs_ticks: float = 0                 # tiempo desde la última activación de bomba
+        self.timer_hurt: float = 2                      # intervalo entre recibir daño
+        self.timer: float = 2                           # tiempo desde el último daño recibido
+        self.score_sub_tick: float = 1                  # intervalo de eliminación de puntos
+        self.score_sub_timer: float = 0                 # tiempo desde que se retiraron los últimos puntos
 
-        # флаги движения
-        self.flag_move_down: bool = False               # вниз
-        self.flag_move_left: bool = False               # влево
-        self.flag_move_right: bool = False              # вправо
-        self.flag_move_up: bool = False                 # вверх
-        self.is_move: bool = False                      # движется ли ГГ
-        self.is_alive: bool = True                      # живой ли персонаж
+        # flags para movimiento
+        self.flag_move_down: bool = False               # abajo
+        self.flag_move_left: bool = False               # izquierda
+        self.flag_move_right: bool = False              # derecha
+        self.flag_move_up: bool = False                 # arriba
+        self.is_move: bool = False                      # ¿Se está moviendo el personaje principal?
+        self.is_alive: bool = True                      # ¿Está vivo el personaje?
 
-        # флаги коллизии
-        self.x_collide: bool = False                    # коллизия произошла слева или справа
-        self.y_collide: bool = False                    # коллизия произошла сверху или снизу
+        # flags de colisión
+        self.x_collide: bool = False                    # La colisión se produjo a la izquierda o a la derecha. (x)
+        self.y_collide: bool = False                    # La colisión se produjo desde arriba o desde abajo. (y)
 
-        # флаги направления
-        self.last_name_direction: str = "DOWN"          # в прошлый кадр анимация была в эту сторону
-        self.move_last_direction: str | None = None     # в прошлый кадр ГГ двигался в эту сторону
+        # flags de direccion
+        self.last_name_direction: str = "DOWN"          # En el último fotograma la animación estaba en esta dirección.
+        self.move_last_direction: str | None = None     # En el último fotograma el personaje principal se movía en esta dirección
 
         self.image = self.params_hero.body_images_dict["DOWN"][0]
         self.image = crop(self.image)
         size = max(self.image.get_width(), self.image.get_height())
         self.rect = pg.Rect((0, 0, size, size))
 
-        self.soul = Soul()                              # душа ГГ
+        self.soul = Soul()                              # alma personaje principal
 
     def hurt(self, damage: int):
         """
-        Получение урона.
+        Recibir daño.
 
-        :param damage: полученный урон.
+        :param damage: daño recibido.
         """
         if self.timer > self.timer_hurt:
             if self.blue_hp:
@@ -306,15 +306,15 @@ class Player(MoveSprite):
 
     def kill_tears(self):
         """
-        Убийство слёз(при переходе между комнатами).
+        Eliminación de lágrimas (al cambiar de habitación).
         """
         self.head.tears.empty()
 
     def update_timer(self, delta_t):
         """
-        Обновление таймеров.
+        Actualización de los temporizadores.
 
-        :param delta_t: время с прошлого кадра.
+        :param delta_t: tiempo desde el último fotograma.
         """
         self.timer += delta_t
         self.score_sub_timer += delta_t
@@ -324,16 +324,16 @@ class Player(MoveSprite):
 
     def blow(self):
         """
-        Получение урона при взрыве бомбы.
+        Obtener daño de una explosión de bomba.
         """
         self.hurt(self.damage_from_blow)
 
     def setting_flags(self, key, is_down: bool):
         """
-        Настройка флагов движения.
+        Configuración de las flags de movimiento.
 
-        :param key: ключ нажатой/отпущенной кнопки.
-        :param is_down: нажата ли кнопка.
+        :param key: tecla presionada o soltada.
+        :param is_down: indica si la tecla está presionada.
         """
 
         if key == self.params_hero.settings_body[0]:
@@ -347,7 +347,7 @@ class Player(MoveSprite):
 
     def animating(self):
         """
-        Анимация движения.
+        Animación de movimiento.
         """
         if self.count_cadrs == 0:
             last_name = self.last_name_direction
@@ -362,9 +362,9 @@ class Player(MoveSprite):
 
     def settings_move_speed(self, delta_t: float):
         """
-        Настройка скоростей движения, в зависимости от нажатых клавиш.
+        Configuración de la velocidad de movimiento, según las teclas presionadas.
 
-        :param delta_t: время с прошлого кадра.
+        :param delta_t: tiempo desde el último fotograma.
         """
         max_speed, a = self.max_speed, self.a * CELL_SIZE
         if (self.flag_move_up or self.flag_move_down) and not \
@@ -404,9 +404,9 @@ class Player(MoveSprite):
 
     def collide(self, other):
         """
-        Коллизия с чем-то.
+        Colisión con algo.
 
-        :param other: то, с чем произошла коллизия.
+        :param other: lo con lo que ha ocurrido la colisión.
         """
         if not MoveSprite.collide(self, other):
             return
@@ -417,15 +417,15 @@ class Player(MoveSprite):
 
     def reset_collides(self):
         """
-        Сброс флагов коллизии.
+        Resetear los flags de colisión.
         """
         self.x_collide = self.y_collide = False
 
     def move_back(self, rect: pg.Rect):
         """
-        Обработка коллизии и изменение скоростей при столкновении.
+        Manejo de colisiones y cambio de velocidades al colisionar.
 
-        :param rect: Rect того, с чем было столкновение.
+        :param rect: Rectángulo con el que hubo colisión.
         """
 
         direction = get_direction(self.rect, rect)
@@ -492,22 +492,22 @@ class Player(MoveSprite):
 
     def update_room_groups(self, required_groups, hero_collide_groups, tear_collide_groups) -> None:
         """
-        Обновление групп коллизий при переходе в другую комнату / этаж.
+        Actualiza los grupos de colisión al cambiar de habitación / piso.
 
-        :param required_groups: группа коллизий для летающего персонажа.
-        :param hero_collide_groups: группа коллизий для ходячего персонажа.
-        :param tear_collide_groups: группы, в которые может врезаться слеза ГГ.
+        :param required_groups: grupo de colisión para el personaje volador.
+        :param hero_collide_groups: grupo de colisión para el personaje caminante.
+        :param tear_collide_groups: grupos en los que las lágrimas del personaje pueden colisionar.
         """
         self.head.set_tear_collide_groups(tear_collide_groups)
         self.collide_groups = required_groups if self.is_flying else hero_collide_groups
 
     def pickup_heart(self, count: int, heart_type: HeartsTypes) -> bool:
         """
-        Поднятие сердца.
+        Subir corazón.
 
-        :param count: кол-во поднятых хп.
-        :param heart_type: какой тип сердца.
-        :return: True - сердце возможно поднять. False - хп полное.
+        :param count: cantidad de corazones subidos.
+        :param heart_type: tipo de corazón.
+        :return: True - se puede subir el corazón. False - la salud está llena.
         """
         if heart_type == HeartsTypes.RED:
             if self.red_hp >= self.max_red_hp:
@@ -522,12 +522,12 @@ class Player(MoveSprite):
 
     def is_buy(self, count: int, price: int, heart_type: HeartsTypes | None) -> bool:
         """
-        Покупка предмета.
+        Compra de un objeto.
 
-        :param count: кол-во поднятых хп.
-        :param price: цена.
-        :param heart_type: какой тип сердца.
-        :return: True - покупка успешна. False - невозможно купить.
+        :param count: cantidad de corazones subidos.
+        :param price: precio.
+        :param heart_type: tipo de corazón.
+        :return: True - compra exitosa. False - no se puede comprar.
         """
         if self.count_money >= price:
             if heart_type:
@@ -539,9 +539,9 @@ class Player(MoveSprite):
 
     def move_to_cell(self, xy_pos):
         """
-        Перемещение ГГ в нужную клетку при переходе в другую комнату.
+        Mover al personaje principal a la celda deseada al cambiar de habitación.
 
-        :param xy_pos: координаты клетки.
+        :param xy_pos: coordenadas de la celda.
         """
         x, y = cell_to_pixels(xy_pos)
         self.x_center = x
@@ -552,10 +552,10 @@ class Player(MoveSprite):
 
     def set_flags_move(self, event: pg.event.Event, is_down: bool):
         """
-        Настройка флагов движения.
+        Configuración de las flags de movimiento.
 
-        :param event: нажатая кнопка.
-        :param is_down: True - кнопка нажата. False - кнопка отпущена.
+        :param event: tecla presionada.
+        :param is_down: True - tecla presionada. False - tecla soltada.
         """
         key = event.key
         if key in self.params_hero.settings_body:
@@ -566,7 +566,7 @@ class Player(MoveSprite):
 
     def reset_speed(self):
         """
-        Сброс флагов и скоростей.
+        Reiniciar flags y velocidades.
         """
         self.flag_move_up = False
         self.flag_move_left = False
@@ -576,9 +576,9 @@ class Player(MoveSprite):
 
     def update(self, delta_t: float):
         """
-        Обновление кадра.
+        Actualización de fotograma.
 
-        :param delta_t: время с прошлого кадра.
+        :param delta_t: tiempo desde el último fotograma.
         """
         if self.red_hp > 0:
             self.use_bombs_ticks += delta_t
@@ -596,7 +596,7 @@ class Player(MoveSprite):
             self.head.set_player_speed(*self.get_speed())
             coords = self.rect.midtop
             self.head.rect.center = coords[0], coords[1] - self.offset
-            # self.offset выведена на практике(чтобы голова выглядела нормально)
+            # self.offset se ha ajustado en la práctica (para que la cabeza se vea normal)
         else:
             if self.is_alive:
                 self.image = self.death
@@ -610,9 +610,9 @@ class Player(MoveSprite):
 
     def activate_bombs(self) -> bool:
         """
-        Активация бомбы.
+        Activación de la bomba.
 
-        :return: True - бомба активирована. False - не хватает бомб или вы недавно использовали.
+        :return: True - la bomba ha sido activada. False - no hay suficientes bombas o se ha utilizado recientemente.
         """
         if self.count_bombs > 0 and self.use_bombs_ticks > self.use_bombs_delay:
             self.count_bombs -= 1
@@ -622,25 +622,25 @@ class Player(MoveSprite):
 
     def scoring_points(self, counts: int):
         """
-        Подсчёт очков.
+        Conteo de puntos.
 
-        :param counts: кол-во очков.
+        :param counts: cantidad de puntos.
         """
         self.score += counts
 
     def get_speed(self) -> tuple[int, int]:
         """
-        Возвращает скорости персонажа.
+        Retorna la velocidad del personaje.
 
-        :return: кортеж скоростей(сначала по оси 0x, потом по оси 0y).
+        :return: una tupla de velocidades (primero en el eje x, luego en el eje y).
         """
         return self.vx, self.vy
 
     def render(self, screen: pg.Surface):
         """
-        Отрисовка персонажа и его слёз.
+        Renderiza el personaje y sus lágrimas.
 
-        :param screen: полотно, на котором нужно нарисовать.
+        :param screen: superficie en la que se debe dibujar.
         """
         self.player_sprites.draw(screen)
         self.head.draw_tears(screen)
@@ -650,7 +650,7 @@ class Player(MoveSprite):
 
 class Soul(pg.sprite.Sprite):
     """
-    Класс души.
+    Clase Soul.
     """
     start_image = load_image('textures/heroes/soul/soul0.png')
     images = load_image('textures/heroes/soul/move_soul.png')
@@ -660,33 +660,33 @@ class Soul(pg.sprite.Sprite):
         super().__init__()
         self.image = self.start_image
         self.animation = Animation(self.images, 10, 1, self.fps_animation, False)
-        self.xy_pos: tuple[int, int] | None = None  # текущие координаты (х, у)
-        self.start_x_pos: int | None = None         # стартовая координата по оси 0x
-        self.vx, self.vy = -50, -50                 # скорости
-        self.timer: int | float = 3                 # длительность анимации
+        self.xy_pos: tuple[int, int] | None = None  # coordenadas actuales (х, у)
+        self.start_x_pos: int | None = None         # coordenada inicial a lo largo del eje 0x
+        self.vx, self.vy = -50, -50                 # velocidad
+        self.timer: int | float = 3                 # duración de la animación
 
     def set_coords(self, xy_pos: tuple[int, int]):
         """
-        Настройка начальной точки души.
+        Establece el punto inicial del alma.
 
-        :param xy_pos: кортеж координат смерти(x, y).
+        :param xy_pos: tupla de coordenadas de la muerte (x, y).
         """
         self.xy_pos = xy_pos
         self.start_x_pos = xy_pos[0]
 
     def is_end_animation(self) -> bool:
         """
-        Закончилась ли анимация смерти.
+        ¿Ha terminado la animación de muerte?
 
-        :return: True -  анимация закончилась. False - ещё нет.
+        :return: True - la animación ha terminado. False - aún no ha terminado.
         """
         return self.timer <= 0
 
     def update(self, delta_t):
         """
-        Обновление кадра.
+        Actualización del fotograma.
 
-        :param delta_t: время с прошлого кадра.
+        :param delta_t: tiempo transcurrido desde el último fotograma.
         """
         if self.timer > 0:
             self.animation.update(delta_t)
@@ -696,9 +696,9 @@ class Soul(pg.sprite.Sprite):
 
     def move(self, delta_t):
         """
-        Перемещение души.
+        Movimiento del alma.
 
-        :param delta_t: время с прошлого кадра.
+        :param delta_t: tiempo transcurrido desde el último fotograma.
         """
         if self.xy_pos[0] <= self.start_x_pos - CELL_SIZE // 4 or self.xy_pos[0] >= self.start_x_pos + CELL_SIZE // 4:
             self.vx *= -1
@@ -706,9 +706,9 @@ class Soul(pg.sprite.Sprite):
 
     def render(self, screen: pg.Surface):
         """
-        Отрисовка души.
+        Renderiza el alma.
 
-        :param screen: полотно, на котором нужно нарисовать.
+        :param screen: superficie en la que se debe renderizar.
         """
         if self.timer > 0:
             screen.blit(self.image, self.xy_pos)
@@ -716,17 +716,17 @@ class Soul(pg.sprite.Sprite):
 
 class HeroTear(BaseTear):
     """
-    Класс слезы ГГ.
+    Clase de lágrimas del personaje principal.
 
-    :param xy_pos: Позиция в комнате.
-    :param xy_pixels: Координата спавна в пикселях, центр слезы.
-    :param damage: Урон.
-    :param max_distance: Дальности полёта в клетках (переделывается в pixels/sec).
-    :param vx: Скорость по горизонтали в клетках (переделывается в pixels/sec).
-    :param vy: Скорость по вертикали в клетках (переделывается в pixels/sec).
-    :param collide_groups: Группы, с которыми надо проверять столкновение.
-    :param groups: Группы спрайтов.
-    :param is_friendly: Игнорирует ли главного героя.
+    :param xy_pos: Posición en la habitación.
+    :param xy_pixels: Coordenada de aparición en píxeles, centro de la lágrima.
+    :param damage: Daño.
+    :param max_distance: Distancia máxima de vuelo en celdas (convertida a píxeles/segundo).
+    :param vx: Velocidad horizontal en celdas (convertida a píxeles/segundo).
+    :param vy: Velocidad vertical en celdas (convertida a píxeles/segundo).
+    :param collide_groups: Grupos con los que se debe comprobar la colisión.
+    :param groups: Grupos de sprites.
+    :param is_friendly: Ignora al personaje principal.
     """
     pop_animation = BaseTear.all_ends.subsurface(0, 0, BaseTear.width, BaseTear.height)
     fps_animation = 30
@@ -750,7 +750,7 @@ class HeroTear(BaseTear):
 
     def set_image(self):
         """
-        Настройка изображения слезы.
+        Establece la imagen de la lágrima.
         """
         max_size = len(BaseTear.all_tears[0]) - 1
         self.image = crop(BaseTear.all_tears[0][min(int(self.damage + 2), max_size)])
