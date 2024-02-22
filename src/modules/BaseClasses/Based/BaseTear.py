@@ -28,19 +28,19 @@ class BaseTear(MoveSprite, PopsImage):
     impacts: list[pg.mixer.Sound] = [load_sound(f"sounds/tear_impact{i}.mp3") for i in range(1, 4)]
 
     """
-    Базовый класс слезы (Мб надо переделать).
+    Clase base de la lágrima (puede requerir modificaciones).
 
-    :param xy_pos: Позиция в комнате.
-    :param xy_pixels: Координата спавна в пикселях, центр слезы.
-    :param damage: Урон.
-    :param distance: Дальности полёта в клетках (переделывается в pixels/sec).
-    :param vx: Скорость по горизонтали в клетках (переделывается в pixels/sec).
-    :param vy: Скорость по вертикали в клетках (переделывается в pixels/sec).
-    :param collide_groups: Группы, с которыми надо проверять столкновение.
-    :param groups: Группы спрайтов.
-    :param acceleration: Ускорение торможения слезы, если надо, чтобы она тормозила.
-    :param max_lifetime: Максимальное время жизни.
-    :param is_friendly: Игнорирует ли главного героя.
+    :param xy_pos: Posición en la habitación.
+    :param xy_pixels: Coordenada de aparición en píxeles, centro de la lágrima.
+    :param damage: Daño.
+    :param distance: Distancia de vuelo en celdas (se convierte a píxeles/segundo).
+    :param vx: Velocidad horizontal en celdas (se convierte a píxeles/segundo).
+    :param vy: Velocidad vertical en celdas (se convierte a píxeles/segundo).
+    :param collide_groups: Grupos con los que se debe comprobar la colisión.
+    :param groups: Grupos de sprites.
+    :param acceleration: Aceleración de frenado de la lágrima, si se desea que frene.
+    :param max_lifetime: Tiempo máximo de vida.
+    :param is_friendly: Ignora al personaje principal.
     """
 
     def __init__(self,
@@ -74,9 +74,9 @@ class BaseTear(MoveSprite, PopsImage):
 
     def update(self, delta_t: float):
         """
-        Обновление положения слезы.
+        Actualiza la posición de la lágrima.
 
-        :param delta_t: Время с прошлого кадра.
+        :param delta_t: Tiempo transcurrido desde el último fotograma.
         """
         if self.destroyed:
             self.destroy_animation(delta_t)
@@ -94,7 +94,7 @@ class BaseTear(MoveSprite, PopsImage):
 
     def check_collides(self):
         """
-        Проверка столкновений.
+        Comprueba las colisiones.
         """
         for collide_group in self.collide_groups:
             if pg.sprite.spritecollideany(self, collide_group):
@@ -105,22 +105,22 @@ class BaseTear(MoveSprite, PopsImage):
 
     def set_rect(self, width: int = None, height: int = None, up: int = 0, left: int = 0):
         """
-        Установка rect слезы.
+        Establecer el rectángulo de la lágrima.
         """
         width, height = self.image.get_width(), self.image.get_height()
         self.rect = pg.Rect(self.start_x - width // 2, self.start_y - height // 2, width, height)
 
     def destroy(self):
         """
-        Смерть слезы...
+        Destruye la lagrima...
         """
         random.choice(BaseTear.impacts).play()
         self.destroyed = True
 
     def destroy_animation(self, delta_t: float):
         if not self.animation:
-            raise SyntaxError("Нет анимации при наследовании от BaseTear / "
-                              "Не переопределён update или destor_animation")
+            raise SyntaxError("No hay animación al heredar de BaseTear / "
+                              "No se ha sobrescrito el método update o destroy_animation")
         status = self.animation.update(delta_t)
         self.image = self.animation.image
         self.rect = self.animation.rect
