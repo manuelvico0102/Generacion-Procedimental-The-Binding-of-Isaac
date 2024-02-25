@@ -6,9 +6,9 @@ from src.modules.BaseClasses import BaseArtifact
 
 class Dinner(BaseArtifact):
     """
-    Обед.
+    Comida.
 
-    :param xy_pixels: Центр
+    :param xy_pixels: Centro
     """
 
     image = load_image("textures/artifacts/dinner.png")
