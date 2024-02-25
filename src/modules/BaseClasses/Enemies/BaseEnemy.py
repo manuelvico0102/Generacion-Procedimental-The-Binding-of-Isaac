@@ -10,15 +10,15 @@ from src.consts import DEATH_ENEMY
 
 class BaseEnemy(BaseSprite):
     """
-    Базовый класс противника.
+    Clase base de enemigos.
 
-    :param xy_pos: Позиция спавна в клетках.
-    :param hp: Здоровье.
-    :param damage_from_blow: Урон получаемый от взрывов.
-    :param room_graph: Графоподобный словарь клеток в комнате.
-    :param main_hero: Главный персонаж (у него должен быть .rect)
-    :param enemy_collide_groups: Группы спрайтов, с которыми нужно обрабатывать столкновения этой сущности.
-    :param groups: Группы спрайтов.
+    :param xy_pos: Posición de aparición en celdas.
+    :param hp: Salud.
+    :param damage_from_blow: Daño recibido por explosiones.
+    :param room_graph: Diccionario de celdas en la habitación.
+    :param main_hero: Personaje principal (debe tener .rect).
+    :param enemy_collide_groups: Grupos de sprites para manejar las colisiones de esta entidad.
+    :param groups: Grupos de sprites.
     """
 
     explosion_kill = load_sound("sounds/explosion_kill.mp3")
@@ -44,7 +44,7 @@ class BaseEnemy(BaseSprite):
 
     def blow(self):
         """
-        Взрыв сущности.
+        Explosión de la entidad.
         """
         self.hurt(self.damage_from_blow)
         if self.hp <= 0:
@@ -57,15 +57,15 @@ class BaseEnemy(BaseSprite):
 
     def update_room_graph(self, room_graph: dict[tuple[int, int]]):
         """
-        Обновление графа комнаты (например, после ломания Poop'a).
+        Actualiza el grafo de la habitación (por ejemplo, después de romper el Poop).
 
-        :param room_graph: Графоподобный словарь клеток комнаты.
+        :param room_graph: Diccionario de celdas similar a un grafo de la habitación.
         """
         self.room_graph = room_graph
 
     def death(self, is_boss: bool = False):
         """
-        Смерть врага.
+        Muerte del enemigo.
         """
         count_score = 100
         if is_boss:
@@ -74,6 +74,15 @@ class BaseEnemy(BaseSprite):
         pg.event.post(pg.event.Event(DEATH_ENEMY, {'count': count_score}))
 
     def collide(self, other: MoveSprite):
+        """
+            Comprueba la colisión con otro sprite y realiza las acciones apropiadas.
+
+            Parámetros:
+            - other (MoveSprite): El sprite con el que se comprueba la colisión.
+
+            Retorna:
+            - bool: True si ocurrió una colisión, False en caso contrario.
+        """
         if isinstance(other, BaseTear):
             self.hurt(other.damage)
             other.destroy()
