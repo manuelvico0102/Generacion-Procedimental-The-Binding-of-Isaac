@@ -21,7 +21,7 @@ class ExampleEnemy(MovingEnemy, ShootingEnemy):
                  tear_collide_groups: tuple[pg.sprite.AbstractGroup, ...],
                  *groups: pg.sprite.AbstractGroup,
 
-                 flyable: bool = False):  # = True чтобы сделать летающим
+                 flyable: bool = False):  # = True para hacerlo volar
         hp: int = 10
         speed: int | float = 2
         damage_from_blow: int = 10
@@ -57,8 +57,8 @@ class ExampleEnemy(MovingEnemy, ShootingEnemy):
 
     def draw_stats(self, screen: pg.Surface):
         """
-        СНИЖАЕТ ФПС!!!
-        Пишет скорость над кружком.
+        REDUCE EL FPS!!!
+        Escribe la velocidad sobre el círculo.
         """
         try:
             tear: ExampleTear = self.tears.sprites()[-1]

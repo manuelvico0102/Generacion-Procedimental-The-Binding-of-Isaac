@@ -16,12 +16,12 @@ host_width, host_height = 70, 106
 
 class Host(ShootingEnemy):
     """
-    Череп, который вытягивается и стреляет.
+    Cráneo que se extiende y dispara.
 
-    :param xy_pos: Позиция в комнате.
-    :param enemy_collide_groups: Группы спрайтов, с которыми нужно обрабатывать столкновения этой сущности.
-    :param tear_collide_groups: Группы спрайтов, с которым нужно обрабатывать столкновения слёз.
-    :param groups: Группы спрайтов.
+    :param xy_pos: Posición en la habitación.
+    :param enemy_collide_groups: Grupos de sprites con los que esta entidad debe manejar colisiones.
+    :param tear_collide_groups: Grupos de sprites con los que las lágrimas deben manejar colisiones.
+    :param groups: Grupos de sprites.
     """
 
     waiting_image = crop(load_image("textures/enemies/host2.png").subsurface(0, 0, host_width, host_height))
@@ -67,7 +67,7 @@ class Host(ShootingEnemy):
             ShootingEnemy.hurt(self, damage)
 
     def shot(self):
-        # Проверка на расстояние, чтобы не стоял открытым не стреляя.
+        # Verificar la distancia para no permanecer abierto sin disparar.
         x, y = self.main_hero.rect.center
         dx = x - self.rect.centerx
         dy = y - self.rect.centery
