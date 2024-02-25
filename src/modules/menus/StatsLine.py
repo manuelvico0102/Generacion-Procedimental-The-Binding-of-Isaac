@@ -10,10 +10,10 @@ from src.utils.funcs import load_image
 
 class Stats:
     """
-    Класс полоски сверху.
+    Clase de la línea de estadísticas en la parte superior.
 
-    :param main_hero: Главный герой.
-    :param level: Текущий этаж.
+    :param main_hero: El héroe principal.
+    :param level: El nivel actual.
     """
     black_line = load_image("textures/room/black_line.png")
 
@@ -26,13 +26,13 @@ class Stats:
 
     def update_minimap(self):
         """
-        Обновление миникарты.
+        Update del minimapa.
         """
         self.minimap.update_minimap()
 
     def update_hero_stats(self):
         """
-        Обновление статистики персонажа.
+        Actualización de las estadísticas del personaje.
         """
         self.hero_stats.update()
 
