@@ -24,16 +24,16 @@ def load_image(name: str,
                colorkey: pg.Color | int | None = None,
                crop_it: bool = False) -> pg.Surface:
     """
-    Загрузка изображения в pygame.Surface.
+    Carga una imagen en pygame.Surface.
 
-    :param name: Путь до файла, начиная от src/data, e.g. "textures/room/basement.png"
-    :param colorkey: Пиксель, по которому будет удаляться задний фон. Если -1, то по левому верхнему.
-    :param crop_it: Обрезать ли изображение по прозрачному фону.
+    :param name: Ruta del archivo, comenzando desde src/data, por ejemplo "textures/room/basement.png"
+    :param colorkey: Píxel que se utilizará para eliminar el fondo. Si es -1, se utilizará el píxel superior izquierdo.
+    :param crop_it: Recortar la imagen según el fondo transparente.
     :return: pygame.Surface
     """
     fullname, save_rel, rel = resource_path('src', 'data', *name.split('/'))
     if not os.path.isfile(fullname):
-        raise FileNotFoundError(f"Файл с изображением '{fullname}' не найден\n{save_rel}\n{rel}")
+        raise FileNotFoundError(f"Archivo de imagen'{fullname}' no encontrado\n{save_rel}\n{rel}")
     image = pg.image.load(fullname)
 
     if colorkey is not None:
@@ -53,15 +53,15 @@ def load_image(name: str,
 @cache
 def load_sound(name, return_path: bool = False) -> pg.mixer.Sound | str:
     """
-    Загрузка звука в pygame.Sound.
+    Carga un sonido en pygame.Sound.
 
-    :param name: Путь до файла, начиная от src/data, e.g. "sounds/fart.mp3"
-    :param return_path: Вернуть ли путь до файла вместо самого звука.
-    :return: pygame.Sound или путь до файла
+    :param name: Ruta del archivo, comenzando desde src/data, por ejemplo "sounds/fart.mp3"
+    :param return_path: Devuelve la ruta del archivo en lugar del sonido en sí.
+    :return: pygame.Sound o ruta del archivo
     """
     fullname, save_rel, rel = resource_path('src', 'data', *name.split('/'))
     if not os.path.isfile(fullname):
-        raise FileNotFoundError(f"Файл с звуком '{fullname}' не найден\n{save_rel}\n{rel}")
+        raise FileNotFoundError(f"Archivo de sonido '{fullname}' no encontrado\n{save_rel}\n{rel}")
     if return_path:
         return fullname
     sound = pg.mixer.Sound(fullname)
@@ -71,10 +71,10 @@ def load_sound(name, return_path: bool = False) -> pg.mixer.Sound | str:
 @cache
 def crop(screen: pg.Surface) -> pg.Surface:
     """
-    Обрезка изображения по крайним не пустым пикселям.
+    Recorta la imagen según los píxeles no vacíos en los bordes.
 
-    :param screen: Изображение.
-    :return: Обрезанное изображение.
+    :param screen: Imagen.
+    :return: Imagen recortada.
     """
     pixels = pg.PixelArray(screen)
     background = pixels[0][0]  # noqa
@@ -98,10 +98,10 @@ def crop(screen: pg.Surface) -> pg.Surface:
 
 def pixels_to_cell(xy_pos: tuple[int, int] | tuple[float, float]) -> tuple[int, int] | None:
     """
-    Переводит пиксели на экране в клетку комнаты.
+    Traduce los píxeles en la pantalla a una celda de la habitación.
 
-    :param xy_pos: Координаты в пикселях.
-    :return: Координаты в клетках.
+    :param xy_pos: Coordenadas en píxeles.
+    :return: Coordenadas en celdas.
     """
     x, y = xy_pos
     if WALL_SIZE <= x < GAME_WIDTH - WALL_SIZE and WALL_SIZE <= y < GAME_HEIGHT - WALL_SIZE:
@@ -113,10 +113,10 @@ def pixels_to_cell(xy_pos: tuple[int, int] | tuple[float, float]) -> tuple[int, 
 
 def cell_to_pixels(xy_pos: tuple[int, int]) -> tuple[int, int]:
     """
-    Переводит клетку комнаты в пиксели на экране (центр клетки).
+    Traduce una celda de la habitación a píxeles en la pantalla (centro de la celda).
 
-    :param xy_pos: Координаты клекти.
-    :return: Координаты в пикселях (центр).
+    :param xy_pos: Coordenadas de la celda.
+    :return: Coordenadas en píxeles (centro).
     """
     x_cell, y_cell = xy_pos
     x = x_cell * CELL_SIZE + WALL_SIZE + CELL_SIZE // 2
@@ -127,14 +127,14 @@ def cell_to_pixels(xy_pos: tuple[int, int]) -> tuple[int, int]:
 def cut_sheet(sheet: str | pg.Surface, columns: int, rows: int,
               total: int = None, scale_sizes: tuple[int, int] = None) -> list[pg.Surface]:
     """
-    Загрузка шрифта.
+    Carga de fuente.
 
-    :param sheet: Путь до файла, начиная от src/data, e.g. "font/prices.png" (или сразу Surface).
-    :param columns: Количество столбцов.
-    :param rows: Количество строк.
-    :param total: Сколько всего букв (если есть пустые клетки).
-    :param scale_sizes: До каких размеров scale'ить (ширина, высота)
-    :return: Список с Surface, где все Surface - число/буква шрифта.
+    :param sheet: Ruta del archivo, comenzando desde src/data, por ejemplo "font/prices.png" (o directamente una Surface).
+    :param columns: Número de columnas.
+    :param rows: Número de filas.
+    :param total: Total de letras (si hay celdas vacías).
+    :param scale_sizes: Tamaño máximo de escala (ancho, alto).
+    :return: Lista de Surface, donde cada Surface representa un número o letra de la fuente.
     """
 
     frames: list[pg.Surface] = []
@@ -171,10 +171,10 @@ def cut_sheet(sheet: str | pg.Surface, columns: int, rows: int,
 
 def get_direction(second_rect: pg.Rect, first_rect: pg.Rect):
     """
-    Возвращает, с какой стороны второй rect
+    Devuelve desde qué lado se produjo la colisión del segundo rectángulo con el primer rectángulo.
 
-    :param first_rect: тело, которое врезалось
-    :param second_rect: тело, с которым произошло столкновение
+    :param first_rect: El cuerpo que colisionó.
+    :param second_rect: El cuerpo con el que se produjo la colisión.
     """
     if (
             first_rect.collidepoint(second_rect.midright) and

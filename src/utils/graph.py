@@ -5,13 +5,13 @@ from src import consts
 
 def valid_coords(x: int, y: int, width: int, height: int) -> bool:
     """
-    Проверка координат на выход за пределы списка.
+    Comprueba si las coordenadas están fuera de los límites de la lista.
 
-    :param x: Координата столбца.
-    :param y: Координата строки.
-    :param width: Ширина двумерного массива.
-    :param height: Высота двумерного массива.
-    :return: Корректны ли координаты.
+    :param x: Coordenada de la columna.
+    :param y: Coordenada de la fila.
+    :param width: Ancho de la matriz bidimensional.
+    :param height: Altura de la matriz bidimensional.
+    :return: Si las coordenadas son válidas.
     """
     return width > x >= 0 and height > y >= 0
 
@@ -21,14 +21,14 @@ def get_neighbors_coords(x: int, y: int, rooms: list[list[consts.RoomsTypes | st
                          ignore_secret: bool = False,
                          use_diagonals: bool = False) -> list[tuple[int, int]]:
     """
-    Получение координат клеток-соседей, в которые можно пройти.
+    Obtener las coordenadas de las celdas vecinas a las que se puede acceder.
 
-    :param x: Координата столбца.
-    :param y: Координата строки.
-    :param rooms: Двумерный массив значений типов комнат.
-    :param ignore_secret: Игнорировать ли секретную комнату.
-    :param use_diagonals: Использовать ли диагональные пути.
-    :return: Список со всеми координатами соседей, в которые можно пройти.
+    :param x: Coordenada de la columna.
+    :param y: Coordenada de la fila.
+    :param rooms: Matriz bidimensional de valores de tipos de habitaciones.
+    :param ignore_secret: Ignorar habitaciones secretas.
+    :param use_diagonals: Utilizar movimientos diagonales.
+    :return: Lista de todas las coordenadas de las celdas vecinas a las que se puede acceder.
     """
     moves = [(0, -1), (0, 1), (1, 0), (-1, 0)]
     if use_diagonals:
@@ -41,18 +41,18 @@ def get_neighbors_coords(x: int, y: int, rooms: list[list[consts.RoomsTypes | st
             valid_coords(x + i, y + j, map_width, map_height) and rooms[y + j][x + i] not in ignored]
 
 
-# Попытаться сделать ход по диагонали, если соседние клетки в эту сторону свободны
-# мб надо побаловаться с созданием графа
+# Intentar mover en diagonal si las celdas vecinas en esa dirección están libres
+# Tal vez sea necesario experimentar con la creación del grafo
 def make_path_to_cell(graph: dict[tuple[int, int]],
                       xy_start: tuple[int, int],
                       xy_end: tuple[int, int]) -> bool | list[tuple[int, int]]:
     """
-    Проверка, можно ли дойти от клетки до стартовой комнаты.
+    Comprueba si es posible llegar desde una celda hasta la habitación de inicio.
 
-    :param graph: Графоподобный словарь клеток комнаты.
-    :param xy_start: Начальная клетка.
-    :param xy_end: Конечная клетка.
-    :return: Список клеток пути или False.
+    :param graph: Diccionario similar a un grafo que representa las celdas de la habitación.
+    :param xy_start: Celda de inicio.
+    :param xy_end: Celda de destino.
+    :return: Lista de celdas del camino o False.
     """
     queue = collections.deque([xy_start])
     visited: dict[tuple[int, int], tuple[int, int]] = {xy_start: None}
@@ -82,20 +82,19 @@ def make_neighbors_graph(rooms: list[list[consts.RoomsTypes | str]],
                          ignore_secret: bool = False,
                          use_diagonals: bool = False) -> dict[tuple[int, int], list[tuple[int, int]]]:
     """
-    Генерация графа соседей.
-    Используется как для построения графа всей карты, так и для построения графа конкретной комнаты,
-    для этого нужно передать массив rooms со значениями:
-      consts.RoomTypes.DEFAULT, если можно ходить по клетке;
-      consts.RoomTypes.EMPTY, если нельзя ходить по клетке.
+    Generación del grafo de vecinos.
+    Se utiliza tanto para construir el grafo de todo el mapa como para construir el grafo de una habitación específica.
+    Para esto, se debe pasar una matriz de habitaciones con los siguientes valores:
+        consts.RoomTypes.DEFAULT, si se puede caminar en la celda;
+        consts.RoomTypes.EMPTY, si no se puede caminar en la celda.
 
-
-    :param rooms: Двумерный массив значений типов комнат.
-    :param ignore_secret: Игнорировать ли секретную комнату.
-    :param use_diagonals: Использовать ли диагональные пути.
-    :return: Графоподобный словарь (координаты: список координат соседей).
+    :param rooms: Matriz bidimensional de valores de tipos de habitaciones.
+    :param ignore_secret: Ignorar habitación secreta.
+    :param use_diagonals: Utilizar movimientos diagonales.
+    :return: Diccionario similar a un grafo (coordenadas: lista de coordenadas de los vecinos).
     """
     graph = collections.defaultdict(list)  # dict[tuple[int, int], list[tuple[int, int]]]
-    # клетка -> список соседей, в которые можно пройти
+    # Celda -> Lista de vecinos a los que se puede acceder
     for y, row in enumerate(rooms):
         for x, col in enumerate(row):
             if col != consts.RoomsTypes.EMPTY:
