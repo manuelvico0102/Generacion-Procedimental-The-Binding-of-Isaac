@@ -7,13 +7,13 @@ from src.modules.BaseClasses.Based.MoveSprite import MoveSprite
 
 class MovableItem(BaseItem, MoveSprite):
     """
-    Передвигаемый предмет.
+    Clase de objeto móvil.
 
-    :param xy_pos: Позиция в комнате.
-    :param collide_groups: Группы спрайтов, через спрайты которых нельзя пройти.
-    :param groups: Группы спрайтов.
-    :param acceleration: Ускорение торможения в клетках/секунду.
-    :param xy_pixels: Позиция в пикселях.
+    :param xy_pos: Posición en la habitación.
+    :param collide_groups: Grupos de sprites con los que no se puede colisionar.
+    :param groups: Grupos de sprites.
+    :param acceleration: Aceleración de frenado en celdas/segundo.
+    :param xy_pixels: Posición en píxeles.
     """
 
     clear_collide_delay = 1
@@ -39,19 +39,19 @@ class MovableItem(BaseItem, MoveSprite):
 
     def move(self, delta_t: float, use_a: bool = True):
         """
-        Перемещение объекта и изменение его скоростей.
+        Mover el objeto y cambiar su velocidad.
 
-        :param delta_t: Время с прошлого кадра.
-        :param use_a: Замедлять ускорением.
+        :param delta_t: Tiempo desde el último fotograma.
+        :param use_a: Utilizar aceleración para desacelerar.
         """
         MoveSprite.move(self, delta_t, use_a=use_a)
         MoveSprite.check_collides(self)
 
     def move_back(self, rect: pg.Rect):
         """
-        Обработка коллизии и изменение скоростей при столкновении.
+        Procesamiento de colisiones y cambio de velocidades en caso de colisión.
 
-        :param rect: Rect того, с чем было столкновение.
+        :param rect: Rectángulo con el que hubo colisión.
         """
         MoveSprite.move_back(self, rect)
 
@@ -67,10 +67,10 @@ class MovableItem(BaseItem, MoveSprite):
 
     def collide(self, other: MoveSprite) -> bool:
         """
-        Не факт, что работает корректно :)
-        Пока что супер примитивно, ага
+        No está garantizado que funcione correctamente :)
+        Por ahora es muy primitivo, sí
 
-        :return: Было ли изменение скоростей.
+        :return: Si hubo cambios en las velocidades.
         """
         if not BaseItem.collide(self, other):
             return False

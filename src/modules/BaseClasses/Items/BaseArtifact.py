@@ -5,31 +5,31 @@ from src.modules.BaseClasses import MoveSprite
 
 class BaseArtifact(MoveSprite):
     """
-    Класс артефакта, который летает над пьедесталом.
+    Clase de artefacto que vuela sobre un pedestal.
 
-    :param xy_pos: Позиция в комнате (пьедестала),
-    :param groups: Группы спрайтов.
-    :param xy_pixels: Позиция в пикселях.
+    :param xy_pos: Posición en la habitación (pedestal).
+    :param groups: Grupos de sprites.
+    :param xy_pixels: Posición en píxeles.
     """
 
-    fly_speed = 0.1  # Скорость движения вверх-вниз в клетках/секунду
+    fly_speed = 0.1  # Velocidad de subida y bajada en celdas/segundo
     change_direction_delay = 2
 
     modes = {
         "mul": lambda x, y: x * y,
         "add": lambda x, y: x + y
     }
-    mode = modes["add"]  # Метод применения к персонажу (сложение или умножение).
+    mode = modes["add"]  # Método de aplicación al artefacto (suma o multiplicación).
 
-    # Тут всё то, что делает лучше.
+    # Aquí se encuentra todo lo que hace mejor.
     boosts = {
-        "max_hp": 1,         # Изменение максимального кол-ва жизней (в целых сердцах).
-        "heal_hp": 1,        # Изменение текущего здоровья (отхил в целых сердцах).
-        "damage": 1,         # Изменение урона от выстрела.
-        "speed": 1,          # Изменение скорости ходьбы персонажа (клетки/секунду).
-        "shot_speed": 1,     # Изменение скорости полёта слезы (клетки/секунду).
-        "shot_distance": 1,  # Изменение дальности полёта слезы (клетки).
-        "shot_delay": -1,    # Изменение задержки между выстрелами (секунды).
+        "max_hp": 1,         # Cambio en la salud máxima (en corazones enteros).
+        "heal_hp": 1,        # Cambio en la salud actual (en corazones enteros).
+        "damage": 1,         # Cambia el daño infligido por el personaje.
+        "speed": 1,          # Cambia la velocidad del personaje (celdas/segundo).
+        "shot_speed": 1,     # Cambia la velocidad de las lágrimas (celdas/segundo).
+        "shot_distance": 1,  # Cambia el rango/distancia de las lágrimas (celdas).
+        "shot_delay": -1,    # Cambia el retraso entre disparos (segundos).
     }
 
     """

@@ -8,12 +8,12 @@ from src.modules.BaseClasses.Based.MoveSprite import MoveSprite
 
 class BaseItem(BaseSprite):
     """
-    Базовый класс для предметов (камень, какашка, ключ, монета, артефакт итд).
+    Clase base para los objetos (piedra, caca, llave, moneda, artefacto, etc.).
 
-    :param xy_pos: Позиция в комнате.
-    :param groups: Все группы, которым принадлежит предмет-спрайт.
-    :param collidable: Можно ли столкнуться с объектом (непроходимый ли).
-    :param hurtable: Наносит ли урон персонажу при прикосновении.
+    :param xy_pos: Posición en la habitación.
+    :param groups: Todos los grupos a los que pertenece el objeto-sprite.
+    :param collidable: Indica si se puede colisionar con el objeto (si es impenetrable).
+    :param hurtable: Indica si causa daño al personaje al tocarlo.
     """
 
     def __init__(self,
@@ -36,10 +36,10 @@ class BaseItem(BaseSprite):
 
     def collide(self, other: MoveSprite) -> bool:
         """
-        Обработка столкновения с энтити.
+        Procesamiento de la colisión con una entidad.
 
-        :param other: Объект, с которым прозошло столкновение (персонаж, слеза, взрыв бомбы).
-        :return: Произошло ли столкновение.
+        :param other: Objeto con el que se produjo la colisión (personaje, lágrima, explosión de bomba).
+        :return: Si se produjo o no la colisión.
         """
         if not BaseSprite.collide(self, other):
             return False
@@ -55,7 +55,7 @@ class BaseItem(BaseSprite):
 
     def destroy(self, *args, **kwargs):
         """
-        Разрушение/Удаление энтити.
+        Destrucción/Eliminación de la entidad.
         """
         pass
         # self.kill()

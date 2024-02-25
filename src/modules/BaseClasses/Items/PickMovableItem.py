@@ -6,13 +6,13 @@ from src.modules.BaseClasses.Items.MovableItem import MovableItem
 
 class PickMovableItem(PickableItem, MovableItem):
     """
-    Подбираемый-передвигаемый предмет.
+    Objeto recogible y movible.
 
-    :param xy_pos: Позиция в комнате.
-    :param collide_groups: Группы спрайтов, через спрайты которых нельзя пройти.
-    :param groups: Группы спрайтов.
-    :param acceleration: Ускорение торможения в клетках/секунду.
-    :param xy_pixels: Позиция в пикселях.
+    :param xy_pos: Posición en la habitación.
+    :param collide_groups: Grupos de sprites con los que no se puede colisionar.
+    :param groups: Grupos de sprites.
+    :param acceleration: Aceleración de frenado en celdas/segundo.
+    :param xy_pixels: Posición en píxeles.
     """
 
     def __init__(self,
@@ -31,9 +31,9 @@ class PickMovableItem(PickableItem, MovableItem):
 
     def collide(self, other: MovableItem) -> bool:
         """
-        Обработка столкновений.
+        Procesamiento de colisiones.
 
-        :param other: С кем было столкновение.
-        :return: Было ли столкновение.
+        :param other: Con quién hubo colisión.
+        :return: Si hubo colisión o no.
         """
         return bool(PickableItem.collide(self, other) + MovableItem.collide(self, other))
