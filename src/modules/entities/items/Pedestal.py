@@ -10,12 +10,12 @@ from src.modules.BaseClasses import PickableItem, BaseArtifact
 
 class Pedestal(PickableItem):
     """
-    Класс пьедестала, на котором стоит артефакт.
+    Clase de pedestal en la que se encuentra un artefacto.
 
-    :param xy_pos: Позиция пьедестала в комнате.
-    :param collide_groups: Группы спрайтов, через спрайты которых нельзя пройти.
-    :param artifacts_group: Группа спрайтов, где все спрайты - артефакты.
-    :param groups: Группы спрайтов.
+    :param xy_pos: Posición del pedestal en la habitación.
+    :param collide_groups: Grupos de sprites con los que no se puede colisionar.
+    :param artifacts_group: Grupo de sprites donde todos los sprites son artefactos.
+    :param groups: Grupos de sprites.
     """
 
     pedestal = load_image("textures/room/altars.png").subsurface(0, 0, CELL_SIZE, CELL_SIZE)
@@ -37,10 +37,10 @@ class Pedestal(PickableItem):
 
     def set_artifact(self, artifact: Type[BaseArtifact] | None, artifacts_group: pg.sprite.AbstractGroup | None):
         """
-        Установка артефакта на пьедестал.
+        Establece el artefacto en el pedestal.
 
-        :param artifact: Артефакт.
-        :param artifacts_group: Группа спрайтов, где все спрайты - артефакты.
+        :param artifact: Artefacto.
+        :param artifacts_group: Grupo de sprites donde todos los sprites son artefactos.
         """
         if artifact:
             assert isinstance(artifacts_group, pg.sprite.AbstractGroup)
@@ -48,16 +48,16 @@ class Pedestal(PickableItem):
 
     def update(self, delta_t: float):
         """
-        Анимация артефакта (перемещение вверх-вниз) происходит внутри артефакта.
+        La animación del artefacto (movimiento hacia arriba y hacia abajo) ocurre dentro del propio artefacto.
 
-        :param delta_t: Время с прошлого кадра.
+        :param delta_t: Tiempo transcurrido desde el último fotograma.
         """
         if self.artifact:
             self.artifact.update(delta_t)
 
     def pickup(self):
         """
-        Подбор предмета.
+        Recoger el objeto.
         """
         if not self.artifact:
             return

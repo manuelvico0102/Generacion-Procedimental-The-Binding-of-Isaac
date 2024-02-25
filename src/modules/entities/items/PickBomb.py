@@ -6,13 +6,13 @@ from src.utils.funcs import load_image, load_sound, crop
 
 class PickBomb(PickMovableItem):
     """
-    Подбираемая бомба.
+    Bomba recogible.
 
-    :param xy_pos: Позиция в комнате.
-    :param main_hero: Главный герой.
-    :param collide_groups: Группы спрайтов, через спрайты которых нельзя пройти.
-    :param groups: Группы спрайтов.
-    :param xy_pixels: Позиция в пикселях.
+    :param xy_pos: Posición en la habitación.
+    :param main_hero: Héroe principal.
+    :param collide_groups: Grupos de sprites a los que no se puede atravesar.
+    :param groups: Grupos de sprites.
+    :param xy_pixels: Posición en píxeles.
     """
 
     bomb = crop(load_image("textures/room/bomb.png").subsurface(48, 0, 48, 48))

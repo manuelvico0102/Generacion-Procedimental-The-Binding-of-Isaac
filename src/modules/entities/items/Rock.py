@@ -9,15 +9,15 @@ from src.modules.BaseClasses import BaseItem
 
 class Rock(BaseItem):
     """
-    Класс комня.
+    Clase de la roca.
 
-    :param xy_pos: Позиция в комнате.
-    :param floor_type: Тип этажа.
-    :param room_type: Тип комнаты.
-    :param collidable_group: Группа спрайтов, где все спрайты - препятствия.
-    :param *groups: Остальные группы спрайтов.
-    :param collidable: Можно ли столкнуться с объектом (непроходимый ли).
-    :param hurtable: Наносит ли урон при прикосновении.
+    :param xy_pos: Posición en la habitación.
+    :param floor_type: Tipo de piso.
+    :param room_type: Tipo de habitación.
+    :param collidable_group: Grupo de sprites donde todos los sprites son obstáculos.
+    :param *groups: Otros grupos de sprites.
+    :param collidable: Si se puede chocar con el objeto (si es impenetrable).
+    :param hurtable: Si causa daño al tocarlo.
     """
     rocks: pg.Surface = load_image("textures/room/rocks.png")
     destroy_frames: pg.Surface = None
@@ -63,13 +63,13 @@ class Rock(BaseItem):
 
     def blow(self):
         """
-        Взрыв камня.
+        Explosión/destrucción de la roca.
         """
         self.destroy()
 
     def destroy(self):
         """
-        Уничтожение камня после взрыва.
+        Destrucción de la roca después de la explosión.
         """
         if not self.collidable:
             return
@@ -84,11 +84,11 @@ class Rock(BaseItem):
 
     def drop_something(self):
         """
-        Дроп лута после поломки.
+        Drop de objetos después de romperse.
         """
         pass
 
     def destroy_animation(self):
         pass
-        # Разлёт частиц, которые удалятся после перезахода в комнату
+        # Partículas dispersas que se eliminarán al volver a entrar en la habitación
         # SingleAnimation(Rock.destroy_frames)

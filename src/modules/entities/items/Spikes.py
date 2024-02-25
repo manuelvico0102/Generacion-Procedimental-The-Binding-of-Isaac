@@ -7,13 +7,13 @@ from src.modules.BaseClasses import BaseItem, MoveSprite
 
 class Spikes(BaseItem):
     """
-    Шипы на полу. Бьются.
+    Spikes en el suelo. Pueden causar daño.
 
-    :param xy_pos: Позиция в комнате.
-    :param groups: Группы спрайтов.
-    :param hiding_delay: С какой задержкой прячется в землю. 0 - не прячется.
-    :param hiding_time: На сколько прячется в землю. 0 - навсегда.
-    :param hurtable: Наносит ли урон.
+    :param xy_pos: Posición en la habitación.
+    :param groups: Grupos de sprites.
+    :param hiding_delay: Retraso antes de ocultarse en el suelo. 0 - no se oculta.
+    :param hiding_time: Cuánto tiempo se oculta en el suelo. 0 - para siempre.
+    :param hurtable: Causa daño o no.
     """
 
     images: list[pg.Surface] = [
@@ -43,15 +43,15 @@ class Spikes(BaseItem):
 
     def set_rect(self, width: int = None, height: int = None, up: int = 0, left: int = 0):
         BaseItem.set_rect(self, width, height)
-        # Попытаться уменьшить Rect шипов, чтобы края не дамажили (уменьшить текстурку?)
+        # Intentar reducir el Rect de los pinchos para evitar daños en los bordes (¿reducir la textura?)
 
     def hide(self, forever: bool = False):
         """
-        Скрыть шипы.
+        Oculta los pinchos.
 
-        :param forever: Навсегда ли.
+        :param forever: Indica si es de forma permanente.
         """
-        # Сделать анимацию и звук?
+        # ¡Realizar animación y sonido?
         self.hurtable = False
         self.image = Spikes.images[-1]
         if forever:
@@ -59,9 +59,9 @@ class Spikes(BaseItem):
 
     def unhide(self):
         """
-        Показать шипы.
+        Mostrar los pinchos.
         """
-        # Сделать анимацию и звук?
+        # ¡Realizar animación y sonido?
         self.hurtable = True
         self.image = Spikes.images[1]
 
@@ -77,7 +77,7 @@ class Spikes(BaseItem):
             self.unhide()
 
     def collide(self, other: MoveSprite):
-        # Добавить MainCharacter
+        # ¡Realizar animación y sonido?
         if isinstance(other, (MoveSprite,)):
             BaseItem.collide(self, other)
 

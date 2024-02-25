@@ -6,21 +6,19 @@ from src.modules.BaseClasses import BaseItem, MoveSprite
 from src.utils.funcs import load_image, crop, load_sound
 from src.modules.characters.parents import Player
 
-
-DOOR_CELL_SIZE = int(consts.CELL_SIZE * 1.75)  # Размер клетки (ширины) двери.
-
+DOOR_CELL_SIZE = int(consts.CELL_SIZE * 1.75)  # Tamaño de la celda de la puerta (ancho).
 
 # class DoorImage:
 #     """
-#     Изображение со всеми дверьми.
-#     Почему-то при определении в DoorTextures выдаёт NameError, поэтому вынес в отдельный класс.
+#        Imagen con todas las puertas.
+#        Por alguna razón, al definirlo en DoorTextures, arroja un NameError, por lo que lo saqué a una clase separada.
 #     """
 #     image = load_image("textures/room/doors.png")
 
 
 class DoorTextures:  # class DoorTextures(DoorImage):
     """
-    Текстурки дверей по отдельности.
+    Texturas de las puertas por separado.
     """
     all_doors = [
         [
@@ -221,13 +219,13 @@ class DoorTextures:  # class DoorTextures(DoorImage):
 
 class Door(BaseItem, DoorTextures):
     """
-    Класс двери.
+    Clase de la puerta.
 
-    :param floor_type: Тип этажа.
-    :param room_type: Тип комнаты (текстурки).
-    :param groups: Группы спрайтов.
-    :param collidable: Закрыта ли дверь.
-    :param hurtable: Наносит ли урон дверь при проходе через неё.
+    :param floor_type: Tipo de piso.
+    :param room_type: Tipo de habitación (textura).
+    :param groups: Grupos de sprites.
+    :param collidable: ¿Está la puerta cerrada?
+    :param hurtable: ¿La puerta causa daño al pasar a través de ella?
     """
 
     open_by_key = load_sound("sounds/door_unlock.wav")
@@ -238,7 +236,7 @@ class Door(BaseItem, DoorTextures):
             floor_type: consts.FloorsTypes,
             from_room_type: consts.RoomsTypes,
             to_room_type: consts.RoomsTypes,
-            # из этого определять текстурку (секретка в т.ч.)
+            # a partir de esto se determina la textura (incluido el secreto)
             *groups: pg.sprite.AbstractGroup,
             collidable: bool = True,
             hurtable: bool = False
@@ -287,9 +285,9 @@ class Door(BaseItem, DoorTextures):
 
     def blow(self, with_sound: bool = True):
         """
-        Уничтожение/Взрыв двери.
+        Destrucción/Explosión de la puerta.
 
-        :param with_sound: Со звуком ли.
+        :param with_sound: ¿Con sonido?
         """
         if not self.collidable:
             return
@@ -301,10 +299,10 @@ class Door(BaseItem, DoorTextures):
 
     def open(self, with_sound: bool = True, with_key: bool = False):
         """
-        Открыть дверь.
+        Abrir la puerta.
 
-        :param with_sound: Со звуком ли.
-        :param with_key: Открывается ли ключом.
+        :param with_sound: ¿Con sonido?
+        :param with_key: ¿Se abre con llave?
         """
         with_key = with_key or self.from_room_type in (
         consts.RoomsTypes.SHOP, consts.RoomsTypes.TREASURE)
@@ -319,9 +317,9 @@ class Door(BaseItem, DoorTextures):
 
     def close(self, with_sound: bool = True):
         """
-        Закрыть двери.
+        Cerrar las puertas.
 
-        :param with_sound: Со звуком ли.
+        :param with_sound: ¿Con sonido?
         """
         self.update_image('close', with_sound=with_sound)
 
@@ -330,11 +328,11 @@ class Door(BaseItem, DoorTextures):
             with_sound: bool = True
             ):
         """
-        Обновление текстурки двери.
+        Actualiza la imagen de la puerta.
 
-        :param state: Открыта, закрыта или взорвана.
-        :param direction: Сверху, снизу, слева или справа.
-        :param with_sound: Со звуком ли.
+        :param state: Abierta, cerrada o explotada.
+        :param direction: Arriba, abajo, izquierda o derecha.
+        :param with_sound: Con sonido o no.
         """
         if state:
             self.state = state
@@ -354,13 +352,13 @@ class Door(BaseItem, DoorTextures):
 
     def play_sound(self):
         """
-        Проигрыш звука открытия/закрытия.
+        Reproduce el sonido de apertura/cierre.
         """
         pass
 
     def set_image(self):
         """
-        Определяет state, direction и texture при инициализации для метода update_image.
+        Define el estado, dirección y textura al inicializar para el método update_image.
         """
         if self.to_room_type in (
         consts.RoomsTypes.SHOP, consts.RoomsTypes.TREASURE,
@@ -404,7 +402,7 @@ class Door(BaseItem, DoorTextures):
                 Door.open_by_key.play()
                 pg.event.post(pg.event.Event(USE_KEY))
 
-        # Вместо MovingEnemy поставить MainCharacter или его туловище
+        # En lugar de MovingEnemy, colocar MainCharacter o su cuerpo
         if isinstance(other, Player) and self.event_rect.colliderect(
                 other.rect
                 ):
@@ -433,6 +431,6 @@ class Door(BaseItem, DoorTextures):
                     )
                 )
 
-            # Реализовать закрытие двери после входа в секретку:
+            # Implementar el cierre de la puerta después de entrar en una habitación secreta:
             # if self.to_room_type == consts.RoomsTypes.SECRET:
             #     self.update_image("close")
