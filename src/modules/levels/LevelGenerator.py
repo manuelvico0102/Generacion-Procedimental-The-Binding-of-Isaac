@@ -124,11 +124,11 @@ def set_other_rooms(rooms: list[list[RoomsTypes | str]]) -> bool:
      :param rooms: matriz bidimensional de valores de RoomsTypes.
      :return: ¿Se han instalado correctamente todas las salas?
     """
-    # Установка секретной комнаты
+    # Configuración de la sala secreta
     if not set_secret_room(rooms):
         return False
 
-    # Установка специальных комнат
+    # Configuración de las salas especiales
     if not set_special_rooms(rooms):
         return False
 
