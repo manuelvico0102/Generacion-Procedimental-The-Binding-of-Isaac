@@ -5,16 +5,16 @@ from src.consts import CELL_SIZE, ROOM_WIDTH, ROOM_HEIGHT, MOVE_TO_NEXT_LEVEL
 from src.utils.funcs import load_image, crop, load_sound
 from src.modules.characters.parents import Player
 
-DOOR_CELL_SIZE = int(CELL_SIZE * 1.75)  # Размер клетки (ширины) двери.
+DOOR_CELL_SIZE = int(CELL_SIZE * 1.75)  # Tamaño de la celda de la puerta (ancho).
 
 
 class Trapdoor(BaseItem):
     """
-    Класс люка в полу. Его отец - комната босса.
+    Clase de la trampilla en el suelo. Su padre es la habitación del jefe.
 
-    :param xy_pos: Позиция в комнате.
-    :param groups: Все группы, которым принадлежит предмет-спрайт.
-    :param collidable: Открыт ли люк.
+    :param xy_pos: Posición en la habitación.
+    :param groups: Todos los grupos a los que pertenece el objeto-sprite.
+    :param collidable: Indica si la trampilla está abierta.
     """
 
     trapdoor_close = crop(load_image("textures/room/doors.png").subsurface(9 * DOOR_CELL_SIZE, 0,

@@ -7,8 +7,8 @@ from src.modules.entities.items import PickMoney, PickHeart, PickBomb, PickKey
 
 class MainHeroActionsHandler:
     """
-    Обработчик событий для главного героя.
-    В данный момент - временный. Ростик, переделай под себя.
+    Handler de eventos para el personaje principal.
+    Actualmente es temporal.
     """
 
     def __init__(self, main_hero: Player):
@@ -16,9 +16,9 @@ class MainHeroActionsHandler:
 
     def keyboard_handler(self, event: pg.event.Event):
         """
-        Обработчик нажатий на клавиатуру.
+        Handler de teclado.
 
-        :param event: Ивент нажатия или отпуская кнопки.
+        :param event: Evento de pulsación o liberación de tecla.
         """
         is_down = event.type == pg.KEYDOWN
         # if is_valid is True:
@@ -33,9 +33,9 @@ class MainHeroActionsHandler:
 
     def loot_pickup_handler(self, event: pg.event.Event):
         """
-        Обработка подбора лута.
+        Manejo de la recolección de botín.
 
-        :param event: Ивент, который содержит item (PickableItem), count (int) и self (вызывается PickableItem).
+        :param event: Evento que contiene item (PickableItem), count (int) y self (llamado por PickableItem).
         """
         name_loot = event.item.__class__
         if name_loot == PickMoney:
@@ -53,9 +53,9 @@ class MainHeroActionsHandler:
 
     def artifact_pickup_handler(self, event: pg.event.Event):
         """
-        Обработка подбора артефакта.
+        Manejo de la recolección de artefactos.
 
-        :param event: Ивент, который содержит item (BaseArtifact) и self (Pedestal) (вызывается Pedestal).
+        :param event: Evento que contiene item (BaseArtifact) y self (Pedestal) (llamado por Pedestal).
         """
         boosts: dict[str, int] = event.item.__class__.boosts
         if "max_hp" in boosts.keys():
@@ -76,10 +76,10 @@ class MainHeroActionsHandler:
 
     def buy_handler(self, event: pg.event.Event):
         """
-        обработка покупки предмета.
+        Manejo de la compra de un artículo.
 
-        :param event: Ивент, который содержит item (PickableItem), count (int), price (int), self (ShopItem)
-                      и иногда heart_type (HeartsTypes).
+        :param event: Evento que contiene item (PickableItem), count (int), price (int), self (ShopItem)
+                  y a veces heart_type (HeartsTypes).
         """
         if self.main_hero.is_buy(event.count, event.price, event.heart_type):
             if not event.heart_type:
@@ -89,8 +89,8 @@ class MainHeroActionsHandler:
 
     def scoring_points(self, event: DEATH_ENEMY):
         """
-        Обработка смерти врага.
+        Manejo de la muerte de un enemigo.
 
-        :param event: Ивент, который содержит кол-во очков за убийство врага count (int).
+        :param event: Evento que contiene la cantidad de puntos por matar al enemigo count (int).
         """
         self.main_hero.scoring_points(event.count)

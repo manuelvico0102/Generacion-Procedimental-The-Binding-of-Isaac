@@ -6,19 +6,19 @@ from src.modules.BaseClasses import PickMovableItem
 from src.consts import HeartsTypes, PICKUP_LOOT
 from src.utils.funcs import load_image, load_sound, crop
 
-heart_width, heart_height = 56, 56  # Размеры клетки текстурки
+heart_width, heart_height = 56, 56  # Dimensiones de la celda de textura
 
 
 class PickHeart(PickMovableItem):
     """
-    Класс подбираемого сердца.
+    Clase para recoger corazones.
 
-    :param xy_pos: Позиция в комнате.
-    :param collide_groups: Группы спрайтов, через спрайты которых нельзя пройти.
-    :param groups: Группы спрайтов.
-    :param xy_pixels: Позиция в пикселях.
-    :param count: Количество сердец при подборе (одна половинка = 1, целое - 2).
-    :param heart_type: Тип сердца.
+    :param xy_pos: Posición en la habitación.
+    :param collide_groups: Grupos de sprites con los que no se puede colisionar.
+    :param groups: Grupos de sprites.
+    :param xy_pixels: Posición en píxeles.
+    :param count: Cantidad de corazones al recoger (medio corazón = 1, corazón completo = 2).
+    :param heart_type: Tipo de corazón.
     """
 
     heart_images = [
@@ -83,7 +83,7 @@ class PickHeart(PickMovableItem):
 
     def pickup(self):
         """
-        Подбор предмета.
+        Recoger el objeto.
         """
         pg.event.post(pg.event.Event(PICKUP_LOOT, {
                                                   'item': self,

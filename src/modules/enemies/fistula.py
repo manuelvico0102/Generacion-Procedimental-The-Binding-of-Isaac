@@ -51,9 +51,9 @@ class Fistula(MovingEnemy):
 
     def move_back(self, rect: pg.Rect):
         """
-        Обработка коллизии и изменение скоростей при столкновении.
+        Procesamiento de colisiones y cambio de velocidades al colisionar.
 
-        :param rect: Rect того, с чем было столкновение.
+        :param rect: Rectángulo con el que hubo colisión.
         """
         # self.x_center, self.y_center = self.x_center_last, self.y_center_last
         # self.rect.center = self.x_center, self.y_center

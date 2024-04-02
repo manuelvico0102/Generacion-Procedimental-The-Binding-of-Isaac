@@ -9,12 +9,12 @@ from src.utils.funcs import load_image
 
 class Guts(MovingEnemy):
     """
-    Мозго-органная каша, которая котается по полу.
+    Guts es una masa cerebral que rueda por el suelo.
 
-    :param xy_pos: Позиция в комнате.
-    :param room_graph: Граф комнаты.
-    :param enemy_collide_groups: Группы спрайтов, с которыми нужно обрабатывать столкновения этой сущности.
-    :param groups: Группы спрайтов.
+    :param xy_pos: Posición en la habitación.
+    :param room_graph: Grafo de la habitación.
+    :param enemy_collide_groups: Grupos de sprites con los que esta entidad debe colisionar.
+    :param groups: Grupos de sprites.
     """
 
     images = load_image("textures/enemies/guts.png")

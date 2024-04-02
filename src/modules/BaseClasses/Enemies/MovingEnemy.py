@@ -12,17 +12,17 @@ from src.utils.graph import make_path_to_cell
 
 class MovingEnemy(BaseEnemy, MoveSprite):
     """
-    Противник ходящий.
+    Enemigo que se mueve.
 
-    :param xy_pos: Позиция спавна в клетках.
-    :param hp: Здоровье.
-    :param speed: Скорость в клетках.
-    :param damage_from_blow: Урон получаемый от взрывов.
-    :param move_update_delay: Задержка между перерасчётом пути до ГГ.
-    :param room_graph: Графоподобный словарь клеток в комнате.
-    :param main_hero: Главный персонаж (у него должен быть .rect)
-    :param enemy_collide_groups: Группы спрайтов, с которыми нужно обрабатывать столкновения этой сущности.
-    :param groups: Группы спрайтов.
+    :param xy_pos: Posición de aparición en celdas.
+    :param hp: Salud.
+    :param speed: Velocidad en celdas.
+    :param damage_from_blow: Daño recibido de explosiones.
+    :param move_update_delay: Retraso entre recálculos de la ruta hacia el personaje principal.
+    :param room_graph: Diccionario de celdas en forma de grafo en la habitación.
+    :param main_hero: Personaje principal (debe tener .rect).
+    :param enemy_collide_groups: Grupos de sprites para manejar las colisiones de esta entidad.
+    :param groups: Grupos de sprites.
     """
 
     def __init__(self,
@@ -50,9 +50,9 @@ class MovingEnemy(BaseEnemy, MoveSprite):
 
     def update(self, delta_t: float):
         """
-        Обновление врага, отмер времени для выстрела или движения.
+        Actualiza al enemigo, mide el tiempo para disparar o moverse.
 
-        :param delta_t: Время с прошлого кадра.
+        :param delta_t: Tiempo transcurrido desde el último fotograma.
         """
         BaseEnemy.update(self, delta_t)
         MoveSprite.update(self, delta_t)
@@ -66,20 +66,20 @@ class MovingEnemy(BaseEnemy, MoveSprite):
 
     def move(self, delta_t: float, change_speeds: bool = True):
         """
-        Перемещение сущности.
+        Movimiento de la entidad.
 
-        :param delta_t: Время с прошлого кадра.
-        :param change_speeds: Вызывать ли update_move_speed().
+        :param delta_t: Tiempo transcurrido desde el último fotograma.
+        :param change_speeds: Indica si se debe llamar a update_move_speed().
         """
         MoveSprite.move(self, delta_t)
 
-        # Проверка коллизий
+        # Verificar colisiones
         if self.flyable:
             self.check_fly_collides()
         else:
             MoveSprite.check_collides(self)
 
-        # Если координаты есть и если они отличаются от текущих, то обновляем скорости
+        # Si hay coordenadas y son diferentes a las actuales, actualizamos las velocidades
         xy_cell = pixels_to_cell((self.x_center, self.y_center))
         if xy_cell and (self.x, self.y) != xy_cell:
             self.x, self.y = xy_cell
@@ -88,21 +88,21 @@ class MovingEnemy(BaseEnemy, MoveSprite):
 
     def move_back(self, rect: pg.Rect):
         """
-        Обработка коллизии и изменение скоростей для обхода препятствия.
+        Maneja la colisión y cambia las velocidades para evitar obstáculos.
 
-        :param rect: Центр спрайта, с которым было столкновение
+        :param rect: Centro del sprite con el que hubo colisión.
         """
         MoveSprite.move_back(self, rect)
 
     def update_move_speed(self):
         """
-        Обновление вертикальной и горизонатальной скоростей для перемещения к ГГ.
+        Actualiza las velocidades vertical y horizontal para moverse hacia el personaje principal.
         """
         if not self.do_update_speed:
             self.move_ticks = 0
             return
 
-        if self.flyable:  # Летающие летят напрямую ахахаха)
+        if self.flyable:  # Los voladores vuelan directamente hacia el personaje principal
             dx = self.main_hero.rect.centerx - self.rect.centerx
             dy = self.main_hero.rect.centery - self.rect.centery
             distance = math.hypot(dx, dy)
@@ -133,7 +133,7 @@ class MovingEnemy(BaseEnemy, MoveSprite):
         for group in self.collide_groups:
             if sprites := pg.sprite.spritecollide(self, group, False):
                 for sprite in sprites:
-                    # Добавлять сюда то, с чем должны сталкиваться летающие
+                    # Agregar aquí los objetos con los que los enemigos voladores deben colisionar
                     if sprite != self and isinstance(sprite, (Border,)):
                         sprite: Border
                         sprite.collide(self)

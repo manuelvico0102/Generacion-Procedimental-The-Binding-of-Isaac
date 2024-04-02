@@ -120,7 +120,7 @@ def return_cheack(j: int, i: int):
             return f'lost'
     elif j % 3 == 1:
         return None
-        # допилить Меню
+        # Finalizar menu
     elif j % 3 == 2:
         return None
 
@@ -132,7 +132,7 @@ def wr(lst):
     return int(win / len(lst) * 100)
 
 
-# Возвращает имя персонажа (допилить возврат управления)
+# Retorna el nombre del personaje (ajustar el retorno de control)
 def choise_menu(screen):
     fon = pygame.transform.scale(load_image('images/menu/choise_fon.png'), (WIDTH, HEIGHT))
     whoam = pygame.sprite.Group()

@@ -16,9 +16,9 @@ class HeroStats:
     }
 
     """
-    Отображение статов гг (хп, бомбы, монеты).
+    Muestra las estadísticas del personaje principal (puntos de vida, bombas, monedas).
 
-    :param main_hero: Главный герой.
+    :param main_hero: El personaje principal.
     """
 
     def __init__(self,

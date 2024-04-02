@@ -8,11 +8,11 @@ from src.modules.characters.parents import Player
 
 class PickableItem(BaseItem):
     """
-    Подбираемый предмет.
+    Clase para representar un objeto que puede ser recogido.
 
-    :param xy_pos: Позиция в комнате.
-    :param groups: Группы спрайтов.
-    :param collidable: Отталкивает ли от себя при столкновении.
+    :param xy_pos: Posición en la habitación.
+    :param groups: Grupos de sprites.
+    :param collidable: Indica si el objeto es colisionable.
     """
 
     def __init__(self,
@@ -26,15 +26,15 @@ class PickableItem(BaseItem):
 
     def collide(self, other: MoveSprite) -> bool:
         """
-        Обработка столкновений.
+        Procesamiento de colisiones.
 
-        :param other: С кем было столкновение.
-        :return: Было ли столкновение.
+        :param other: El objeto con el que hubo colisión.
+        :return: Si hubo colisión o no.
         """
         if not BaseItem.collide(self, other):
             return False
 
-        # Заменить MovingEnemy на MainCharacter
+        # Reemplazar MovingEnemy por MainCharacter
         if isinstance(other, Player):
             self.pickup()
 
@@ -47,8 +47,8 @@ class PickableItem(BaseItem):
 
     def pickup(self):
         """
-        Подбор предмета.
-        В наследователе надо делать pg.event.post(PICKUP_LOOT).
+        Recoger el objeto.
+        En la clase heredada, se debe realizar pg.event.post(PICKUP_LOOT).
         """
         pg.event.post(pg.event.Event(PICKUP_LOOT, {
                                                   'item': self,

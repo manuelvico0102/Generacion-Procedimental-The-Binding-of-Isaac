@@ -7,15 +7,15 @@ from src.utils.funcs import cut_sheet
 
 class Animation:
     """
-    Класс для воспроизведения анимаций.
+    Clase para reproducir animaciones.
 
-    :param sheet: Surface, который обрезается на кадры.
-    :param columns: Кол-во кадров в длине.
-    :param rows: Количество кадров в высоте.
-    :param fps: Скорость анимации.
-    :param single_play: Проиграть анимацию один раз.
-    :param scale_sizes: К каким размерам scale'ить кадр.
-    :param frame: С какого кадра начинать, -1 - с рандомного.
+    :param sheet: Superficie que se recorta en fotogramas.
+    :param columns: Número de fotogramas en el ancho.
+    :param rows: Número de fotogramas en el alto.
+    :param fps: Velocidad de la animación.
+    :param single_play: Reproducir la animación solo una vez.
+    :param scale_sizes: Tamaño al que escalar el fotograma.
+    :param frame: Desde qué fotograma comenzar, -1 - aleatorio.
     """
     def __init__(self,
                  sheet: pg.Surface,
@@ -42,10 +42,10 @@ class Animation:
 
     def update(self, delta_t: float) -> bool | None:
         """
-        Обновление кадра в анимации, если пришло его время.
+        Actualiza el fotograma de la animación si ha llegado su momento.
 
-        :param delta_t: Время с прошлого кадра.
-        :return: True - кадр обновился. False - кадр не обновился. None - одноразовая анимация кончилась.
+        :param delta_t: Tiempo transcurrido desde el último fotograma.
+        :return: True - el fotograma se actualizó. False - el fotograma no se actualizó. None - la animación de reproducción única ha terminado.
         """
         self.ticks_counter += delta_t
 

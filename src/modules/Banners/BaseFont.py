@@ -5,14 +5,14 @@ from src.utils.funcs import cut_sheet
 
 class BaseFont:
     """
-    Класс шрифта.
+    Clase de fuente base.
 
-    :param name: Путь до файла, начиная от src/data, e.g. "font/prices.png"
-    :param alphabet: Буквы по порядку с картинки шрифта.
-    :param columns: Количество столбцов.
-    :param rows: Количество строк.
-    :param total: Сколько всего букв (если есть пустые клетки).
-    :param scale_sizes: До каких размеров scale'ить (ширина, высота)
+    :param name: Ruta del archivo, comenzando desde src/data, por ejemplo: "font/prices.png"
+    :param alphabet: Letras en orden de la imagen de la fuente.
+    :param columns: Número de columnas.
+    :param rows: Número de filas.
+    :param total: Cantidad total de letras (si hay celdas vacías).
+    :param scale_sizes: Tamaños de escala (ancho, alto) a los que se debe ajustar.
     """
 
     def __init__(self,
@@ -25,14 +25,14 @@ class BaseFont:
         self.letters = cut_sheet(name, columns, rows, total=total, scale_sizes=scale_sizes)
         self.alphabet = alphabet
 
-        assert len(self.letters) == len(alphabet), "Неверно введены буквы или неверно указан путь до шрифта"
+        assert len(self.letters) == len(alphabet), "Las letras ingresadas son incorrectas o la ruta a la fuente es incorrecta"
 
     def write_text(self, text: str) -> pg.Surface:
         """
-        Написать текст.
+        Escribir texto.
 
-        :param text: Что написать
-        :return: Поверхность с этим текстом.
+        :param text: El texto a escribir.
+        :return: Superficie con el texto.
         """
 
         text = text.lower()
@@ -44,19 +44,19 @@ class BaseFont:
                 surface.blit(self.letters[self.alphabet.index(symb)],
                              (i * width, 0))
             except IndexError:
-                raise IndexError(f'В шрифте с буквами "{self.alphabet}" нет буквы "{symb}')
+                raise IndexError(f'En la fuente de letras "{self.alphabet}" no se encuentra la letra "{symb}')
 
         return surface
 
     def place_text(self, screen: pg.Surface, text: str | pg.Surface,
                    xy_center: tuple[int, int], xy_leftup: tuple[int, int] = None):
         """
-        Нанести текст на экран.
+        Aplica el texto en la pantalla.
 
-        :param screen: На что наносить.
-        :param text: Что наносить.
-        :param xy_center: Центр куда наносить.
-        :param xy_leftup: Левый верхний угол.
+        :param screen: La pantalla en la que se aplica.
+        :param text: El texto que se aplica.
+        :param xy_center: El centro donde se aplica.
+        :param xy_leftup: La esquina superior izquierda.
         """
 
         if isinstance(text, str):

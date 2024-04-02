@@ -6,7 +6,7 @@ from src.modules.levels.Room import Room
 
 
 class MovingRoomAnimation:
-    # Чтобы время туда-сюда в разные направления было одинаковым, умножаю на отношение длины к высоте
+    # Para que el tiempo de ida y vuelta en diferentes direcciones sea el mismo, multiplico por la relación entre el ancho y la altura
     vy_speed = consts.CELL_SIZE * -20
     vx_speed = vy_speed * consts.ROOM_WIDTH / consts.ROOM_HEIGHT
 
@@ -26,7 +26,7 @@ class MovingRoomAnimation:
         elif direction == consts.Moves.LEFT:
             self.to_x, self.to_y = -consts.GAME_WIDTH, 0
         else:
-            raise ValueError("Неправильный директион...")
+            raise ValueError("Dirección incorrecta...")
         self.vx, self.vy = self.vx_speed * direction.value[0], self.vy_speed * direction.value[1]
 
         self.screen = pg.Surface((consts.WIDTH, consts.HEIGHT))
@@ -48,7 +48,7 @@ class MovingRoomAnimation:
         self.to_x += self.vx * delta_t
         self.to_y += self.vy * delta_t
 
-        # Способ рабочий, но если мало фепеес, то может сломаться)
+        # El método funciona, pero si no hay suficiente energía, puede romperse)
         # if abs(self.to_x) < 10 and abs(self.to_y) < 10:
         #   self.is_over = True
 
@@ -61,4 +61,4 @@ class MovingRoomAnimation:
         elif self.direction == consts.Moves.LEFT:
             self.is_over = self.to_x >= 0
         else:
-            raise ValueError("Оно выдаёт ошибку за неверный direction ещё в ините, поэтому зачем ты что-то меняешь? А?")
+            raise ValueError("El código genera un error debido a una dirección incorrecta en el método __init__, ¿por qué estás haciendo cambios innecesarios?")

@@ -5,18 +5,18 @@ import pygame as pg
 from src.modules.BaseClasses import PickMovableItem
 from src.utils.funcs import load_image, load_sound, crop
 
-key_width, key_height = 48, 48  # Размеры клетки текстурки
+key_width, key_height = 48, 48  # Dimensiones de la celda de textura
 
 
 class PickKey(PickMovableItem):
     """
-    Класс подбираемого ключа.
+    Clase de la llave recogible.
 
-    :param xy_pos: Позиция в комнате.
-    :param collide_groups: Группы спрайтов, через спрайты которых нельзя пройти.
-    :param groups: Группы спрайтов.
-    :param xy_pixels: Позиция в пикселях.
-    :param count: Количество ключей при подборе.
+    :param xy_pos: Posición en la habitación.
+    :param collide_groups: Grupos de sprites a los que no se puede atravesar.
+    :param groups: Grupos de sprites.
+    :param xy_pixels: Posición en píxeles.
+    :param count: Cantidad de llaves al recoger.
     """
 
     keys_images = [

@@ -52,14 +52,14 @@ class RoomTextures:
 
 class Room(RoomTextures):
     """
-    Класс комнаты.
+     Clase habitación.
 
-    :param floor_type: Тип этажа.
-    :param room_type: Тип комнаты.
-    :param texture_variant: Вариант текстуры (1-4, один из вариантов из изображения).
-    :param xy_pos: Расположение на этаже (x, y).
-    :param main_hero: Главный герой.
-    """
+     :param Floor_type: Tipo de piso.
+     :param room_type: tipo de habitación.
+     :param texture_variant: Opción de textura (1-4, una de las opciones de la imagen).
+     :param xy_pos: Ubicación en el piso (x, y).
+     :param main_hero: El personaje principal.
+     """
     paths_update_delay: int | float = 1
     artifacts = [Dinner, FreshMeat, GreenSyringe, GreySyringe, MomsHeels, PurpleSyringe, RedSyringe, WhiteSyringe]
     loot = [PickHeart, PickKey, PickMoney, PickBomb]
@@ -71,7 +71,7 @@ class Room(RoomTextures):
                  main_hero: Player,
                  texture_variant: int = None):
 
-        assert room_type != consts.RoomsTypes.EMPTY, f"Тип комнаты не можеть быть {consts.RoomsTypes.EMPTY}."
+        assert room_type != consts.RoomsTypes.EMPTY, f"El tipo de habitación no puede ser {consts.RoomsTypes.EMPTY}."
 
         self.x, self.y = xy_pos
         self.floor_type = floor_type
@@ -80,22 +80,22 @@ class Room(RoomTextures):
         self.minimap_cell: pg.Surface = pg.Surface((0, 0))
         self.background: pg.Surface = pg.Surface((0, 0))
         self.paths_update_ticks = 0
-        self.is_over = False  # Пройдена ли комната
-        self.is_friendly = True  # Комната содержит только шипы, троль-бомбы итп, т.е. двери открыти, но ловушки есть
+        self.is_over = False  # ¿Se pasó la habitación?
+        self.is_friendly = True  # La habitación solo contiene púas, bombas troll, etc., es decir. Abre las puertas, pero hay trampas.
 
-        # Отображение на мини-карте разными цветами
+        # Mostrar en el minimapa en diferentes colores.
         self.is_spotted = False
         self.is_visited = False
         self.is_active = False
 
-        self.debug_render = pg.sprite.Group()  # Отрисовка того, что обычно не видно
-        self.colliadble_group = pg.sprite.Group()  # То, через что нельзя пройти, пока оно есть
-        self.obstacles = pg.sprite.Group()  # Препятствия для построения графа комнаты
-        self.blowable = pg.sprite.Group()  # То, что взрывается
+        self.debug_render = pg.sprite.Group()  # Renderizando lo que normalmente no es visible
+        self.colliadble_group = pg.sprite.Group()  # Algo que no se puede atravesar mientras está ahí
+        self.obstacles = pg.sprite.Group()  # Obstáculos para construir un gráfico de habitación
+        self.blowable = pg.sprite.Group()  # Algo que explota
         self.main_hero_group = pg.sprite.Group()
         self.main_hero_group.add(main_hero)
-        self.movement_borders = pg.sprite.Group()  # Барьеры, не дающие пройти через себя
-        self.tears_borders = pg.sprite.Group()  # Барьеры, не дающие слезам пролететь через себя
+        self.movement_borders = pg.sprite.Group()  # Barreras que no permiten traspasar uno mismo
+        self.tears_borders = pg.sprite.Group()  # Barreras que impiden que las lágrimas salgan volando
 
         self.enemies = pg.sprite.Group()
         self.bosses = pg.sprite.Group()
@@ -106,10 +106,10 @@ class Room(RoomTextures):
         self.spikes = pg.sprite.Group()
         self.fires = pg.sprite.Group()
         self.doors = pg.sprite.Group()
-        self.other = pg.sprite.Group()  # Бомбы, ключи, монеты итд итп
-        self.artifacts_group = pg.sprite.Group()  # Артефакты
-        self.paths = dict()  # Пути для наземных
-        self.fly_paths = dict()  # Пути для летающих врагов
+        self.other = pg.sprite.Group()  # Bombas, llaves, monedas, etc., etc.
+        self.artifacts_group = pg.sprite.Group()  # artefactos
+        self.paths = dict()  # Caminos para el piso
+        self.fly_paths = dict()  # Caminos para enemigos voladores.
 
         self.main_hero = main_hero
 
@@ -146,14 +146,14 @@ class Room(RoomTextures):
             )
         )
         if self.room_type == consts.RoomsTypes.SPAWN and self.floor_type == consts.FloorsTypes.BASEMENT:
-            # Показ управления в спавн команте
+            # Mostrar controles en la sala de generación
             background.blit(Room.controls_hint, (consts.WALL_SIZE, consts.WALL_SIZE))
         self.background = background
 
     def setup_entities(self):
         """
-        Рандомная генерация вещей в комнате без какой-либо особой логики :)
-        """
+         Generación aleatoria de entidades en la habitación sin ninguna lógica especial :)
+         """
         centerx, centery = consts.ROOM_WIDTH // 2, consts.ROOM_HEIGHT // 2
 
         if self.room_type == consts.RoomsTypes.SPAWN:
@@ -258,7 +258,7 @@ class Room(RoomTextures):
 
     def setup_graph(self):
         """
-        Построение графа соседних клеток в комнате для передвижения противников.
+         Construir un gráfico de celdas vecinas en una habitación para el movimiento de oponentes.
         """
         cells = [[consts.RoomsTypes.DEFAULT] * consts.ROOM_WIDTH for _ in range(consts.ROOM_HEIGHT)]
 
@@ -273,8 +273,8 @@ class Room(RoomTextures):
 
     def setup_doors(self, doors: list[tuple[consts.DoorsCoords, consts.RoomsTypes]]):
         """
-        Установка дверей с нужными текстурками.
-        """
+         Instalación de puertas con las texturas necesarias.
+         """
         for coords, to_room_type in doors:
             Door(coords, self.floor_type, self.room_type, to_room_type,
                  self.doors, self.colliadble_group, self.blowable)
@@ -282,7 +282,7 @@ class Room(RoomTextures):
 
     def setup_door_borders(self, doors: list[tuple[consts.DoorsCoords, consts.RoomsTypes]]):
         """
-        Установка барьеров стен, супер крутая функция.
+          Instalación de barreras de pared
         """
         doors = [door[0] for door in doors]
         all_coords = list(consts.DoorsCoords)
@@ -368,37 +368,37 @@ class Room(RoomTextures):
 
     def setup_borders(self):
         """
-        Установка барьеров на краях экрана.
-        """
-        # Лево
+         Instalación de barreras en los bordes de la pantalla.
+         """
+        # Izquierda
         Border(0, 0, 1, consts.GAME_HEIGHT,
                self.movement_borders, self.tears_borders, self.debug_render, is_killing=True)
-        # Верх
+        # Arriba
         Border(0, 0, consts.WIDTH, 1,
                self.movement_borders, self.tears_borders, self.debug_render, is_killing=True)
-        # Низ
+        # Inferior
         Border(0, consts.GAME_HEIGHT - 1, consts.WIDTH, 1,
                self.movement_borders, self.tears_borders, self.debug_render, is_killing=True)
-        # Право
+        # Derecha
         Border(consts.WIDTH - 1, 0, 1, consts.GAME_HEIGHT,
                self.movement_borders, self.tears_borders, self.debug_render, is_killing=True)
 
     def update_doors(self, state: str, with_sound: bool = True):
         """
-        Открыть/Закрыть/Взорвать все двери.
+        Abrir/Cerrar/Explotar todas las puertas.
 
         :param state: "open", "close", "blow".
-        :param with_sound: Со звуком ли.
+        :param with_sound: Con sonido o no.
         """
         for door in self.doors.sprites():
             getattr(door, state)(with_sound=with_sound)
 
     def update_detection_state(self, is_spotted: bool = False, is_active: bool = False):
         """
-        Обновление состояния видимости на миникарте.
+        Actualiza el estado de visibilidad en el minimapa.
 
-        :param is_spotted: Замечена ли комната (дверь в неё).
-        :param is_active: Текущая ли комната.
+        :param is_spotted: Indica si la habitación ha sido detectada (puerta abierta hacia ella).
+        :param is_active: Indica si es la habitación actual.
         """
 
         self.is_active = is_active
@@ -410,9 +410,9 @@ class Room(RoomTextures):
 
     def update_minimap(self):
         """
-        Обновление иконки для мини-карты.
+        Actualización del ícono para el minimapa.
         """
-        # Если убрать .copy(), то будет забавный баг)
+        # Si eliminas .copy(), habrá un error gracioso)
         if self.is_active:
             self.minimap_cell = self.minimap_cells[2].copy()
         elif self.is_visited:
@@ -420,13 +420,13 @@ class Room(RoomTextures):
         elif self.is_spotted:
             self.minimap_cell = self.minimap_cells[0].copy()
 
-        # Особое отображение секретки после посещения
+        # Mostrar secreto especial después de ser visitado
         if self.room_type == consts.RoomsTypes.SECRET and self.is_visited and not self.is_active:
             self.minimap_cell = self.minimap_cells[0].copy()
 
     def get_minimap_cell(self) -> pg.Surface:
         """
-        Возвращает иконку для миникарты.
+        Retorna el ícono para el minimapa.
 
         :return: pg.Surface.
         """
@@ -441,7 +441,7 @@ class Room(RoomTextures):
 
     def update(self, delta_t: float):
         """
-        Обновление комнаты (перемещение врагов, просчёт коллизий)
+        Actualización de la habitación (movimiento de enemigos, cálculo de colisiones)
         """
         self.other.update(delta_t)
         self.spikes.update(delta_t)
@@ -465,7 +465,7 @@ class Room(RoomTextures):
 
     def update_enemies_paths(self):
         """
-        Обновление графа комнаты для врагов (после поломки Poop'a пригождается).
+        Actualiza el grafo de la habitación para los enemigos (útil después de romper el Poop).
         """
         for enemy in self.enemies:
             enemy: BaseEnemy
@@ -476,7 +476,7 @@ class Room(RoomTextures):
 
     def win_room(self):
         """
-        Открытие всех дверей итд, когда все враги умерли.
+        Abre todas las puertas, etc., cuando todos los enemigos han muerto.
         """
         self.update_doors("open")
         if not self.is_friendly:
@@ -524,7 +524,7 @@ class Room(RoomTextures):
             BlowBomb(room_pos, (self.colliadble_group, self.movement_borders, self.other),
                      (self.blowable, self.other, self.main_hero_group), self.other, xy_pixels=xy_pos)
 
-    def set_pickable(self, xy_pos: tuple[int, int]):  # Клетка
+    def set_pickable(self, xy_pos: tuple[int, int]):  # Celda
         chance = random.random()
         if chance > 0.75:
             PickMoney(xy_pos, (self.colliadble_group, self.movement_borders, self.other), self.other)

@@ -13,12 +13,12 @@ from src.consts import BUY_ITEM
 
 class ShopItem(PickableItem):
     """
-    Класс предмета, который можно купить в магазин.
+    Clase de un objeto que se puede comprar en la tienda.
 
-    :param xy_pos: Позиция в комнате.
-    :param item: Предмет, который продаётся.
-    :param groups: Группы спрайтов.
-    :param price: Цена предмета.
+    :param xy_pos: Posición en la habitación.
+    :param item: Objeto que se vende.
+    :param groups: Grupos de sprites.
+    :param price: Precio del objeto.
     """
 
     def __init__(self,
@@ -62,10 +62,10 @@ class ShopItem(PickableItem):
 
     def collide(self, other: MoveSprite):
         """
-        Обработка столкновений.
+        Procesamiento de colisiones.
 
-        :param other: С кем было столкновение.
-        :return: Было ли столкновение.
+        :param other: Con quién hubo colisión.
+        :return: Si hubo colisión o no.
         """
         if not pg.Rect.colliderect(self.event_rect, other.rect):
             return
@@ -77,7 +77,7 @@ class ShopItem(PickableItem):
 
     def pickup(self):
         """
-        Подбор (покупка) предмета.
+        Recoger (comprar) el objeto.
         """
         pg.event.post(pg.event.Event(BUY_ITEM, {
                                                  'item': self.item,

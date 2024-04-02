@@ -6,18 +6,18 @@ from src.modules.BaseClasses import PickMovableItem
 from src.utils.funcs import load_image, load_sound
 
 
-coin_width, coin_height = 48, 35  # Размеры клетки текстурки
+coin_width, coin_height = 48, 35  # Dimensiones de la celda de textura
 
 
 class PickMoney(PickMovableItem):
     """
-    Подбираемая монетка (penny, nickel, dime)
+    Moneda recogible (penny, nickel, dime)
 
-    :param xy_pos: Позиция в комнате.
-    :param collide_groups: Группы спрайтов, через спрайты которых нельзя пройти.
-    :param groups: Группы спрайтов.
-    :param xy_pixels: Позиция в пикселях.
-    :param count: Количество деняк при подборе (1, 5 или 10).
+    :param xy_pos: Posición en la habitación.
+    :param collide_groups: Grupos de sprites con los que no se puede colisionar.
+    :param groups: Grupos de sprites.
+    :param xy_pixels: Posición en píxeles.
+    :param count: Cantidad de dinero al recoger (1, 5 o 10).
     """
 
     coins_images = [

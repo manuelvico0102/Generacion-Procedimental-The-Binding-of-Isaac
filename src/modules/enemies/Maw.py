@@ -11,13 +11,13 @@ from src.utils.funcs import load_sound, load_image
 
 class Maw(MovingEnemy, ShootingEnemy):
     """
-    Летающая башка, которая иногда и стреляет.
+    Cabeza voladora que ocasionalmente dispara.
 
-    :param xy_pos: Позиция в комнате.
-    :param main_hero: Главный герой.
-    :param enemy_collide_groups: Группы спрайтов, с которыми нужно обрабатывать столкновения этой сущности.
-    :param tear_collide_groups: Группы спрайтов, с которым нужно обрабатывать столкновения слёз.
-    :param groups: Группы спрайтов.
+    :param xy_pos: Posición en la habitación.
+    :param main_hero: Héroe principal.
+    :param enemy_collide_groups: Grupos de sprites con los que esta entidad debe manejar colisiones.
+    :param tear_collide_groups: Grupos de sprites con los que las lágrimas deben manejar colisiones.
+    :param groups: Grupos de sprites.
     """
 
     death_sounds = [load_sound(f"sounds/meat_death{i}.mp3") for i in range(1, 6)]

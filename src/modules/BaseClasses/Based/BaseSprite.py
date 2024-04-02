@@ -5,10 +5,10 @@ from src.utils.funcs import cell_to_pixels
 
 class BaseSprite(pg.sprite.Sprite):
     """
-    Базированный спрайт.
+    Sprite base.
 
-    :param xy_pos: Позиция в комнате.
-    :param groups: Группы спрайтов
+    :param xy_pos: Posición en la habitación.
+    :param groups: Grupos de sprites.
     """
     def __init__(self,
                  xy_pos: tuple[int, int],
@@ -18,21 +18,21 @@ class BaseSprite(pg.sprite.Sprite):
 
     def update(self, delta_t: float):
         """
-        Обновление положения/счётчиков.
+        Actualiza la posición/contadores.
 
-        :param delta_t: Время с прошлого кадра.
+        :param delta_t: Tiempo transcurrido desde el último fotograma.
         """
         pass
 
     def set_image(self):
         """
-        Установка текстурки.
+        Establece la textura
         """
         pass
 
     def set_rect(self, width: int = None, height: int = None, up: int = 0, left: int = 0):
         """
-        Установка объекта в центре своей клетки.
+        Establecer el objeto en el centro de su celda.
         """
         self.rect = self.image.get_rect()
         if width:
@@ -44,21 +44,21 @@ class BaseSprite(pg.sprite.Sprite):
 
     def hurt(self, damage: int):
         """
-        Получение урона.
+        Obtener daño.
         """
         pass
 
     def blow(self):
         """
-        Получение урона от взрыва.
+        Obtener daño de una explosión.
         """
         pass
 
     def collide(self, other: pg.sprite.Sprite) -> bool:
         """
-        Обработка столкновений.
+        Manejo de colisiones.
 
-        :param other: наследник BaseSprite
-        :return: Будет ли столкновение (разные ли объекты).
+        :param other: instancia de BaseSprite
+        :return: ¿Habrá colisión? (diferentes objetos)
         """
         return other != self

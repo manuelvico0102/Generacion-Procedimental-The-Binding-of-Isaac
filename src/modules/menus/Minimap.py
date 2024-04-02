@@ -7,9 +7,9 @@ from src.consts import MINIMAP_WIDTH, MINIMAP_HEIGHT, MINIMAP_CELL_WIDTH, MINIMA
 
 class Minimap:
     """
-    Класс миникарты.
+    Clase Minimap.
 
-    :param level: Текущий этаж.
+    :param level: Nivel actual.
     """
     def __init__(self,
                  level: Level):
@@ -19,7 +19,7 @@ class Minimap:
 
     def update_minimap(self):
         """
-        Обновление миникарты.
+        Actualización del minimapa.
         """
         rooms = self.level.get_rooms()
         surface = pg.Surface((MINIMAP_WIDTH, MINIMAP_HEIGHT), pg.SRCALPHA, 32)

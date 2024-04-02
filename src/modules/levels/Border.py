@@ -5,14 +5,14 @@ from src.modules.BaseClasses import BaseSprite, BaseTear, MoveSprite
 
 class Border(BaseSprite):
     """
-    Невидимый барьер для стен.
+    Barrera invisible para paredes.
 
-    :param x: Пиксель на экране.
-    :param y: Пиксель на экране.
-    :param width: Ширина стены.
-    :param height: Высота стены.
-    :param groups: Группы спрайтов
-    :param is_killing: Убивает ли спрайт при коллизии.
+    :param x: Píxel en la pantalla.
+    :param y: Píxel en la pantalla.
+    :param width: ancho de la pared.
+    :param height: altura de la pared.
+    :param groups: grupos de sprites
+    :param is_killing: si el sprite muere en caso de colisión.
     """
 
     def __init__(self,
@@ -27,9 +27,6 @@ class Border(BaseSprite):
         self.is_killing = is_killing
         self.image = pg.Surface((width, height), pg.SRCALPHA, 32)
         self.rect = pg.Rect(x, y, width, height)
-
-        # Для видимости, где это чудо
-        # pg.draw.rect(self.image, 'red', (0, 0, self.rect.width, self.rect.height), width=4)
 
     def collide(self, other: MoveSprite):
         if isinstance(other, BaseTear):

@@ -6,9 +6,9 @@ from src.modules.BaseClasses import BaseArtifact
 
 class WhiteSyringe(BaseArtifact):
     """
-    Белый шприц.
+    White Syringe.
 
-    :param xy_pixels: Центр
+    :param xy_pixels: Centro
     """
 
     image = load_image("textures/artifacts/white_syringe.png")

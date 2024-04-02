@@ -12,22 +12,22 @@ from src.consts import CELL_SIZE
 
 class BlowBomb(MovableItem):
     """
-    Взрываемая бомба.
+    Bomba explosiva.
 
-    :param xy_pos: Позиция в комнате.
-    :param collide_groups: Группа препятствий, через которые нельзя пройти.
-    :param blow_groups: Группы спрайтов, где все спрайты взрываются.
-    :param groups: Группы спрайтов.
-    :param xy_pixels: Позиция в пикселях.
+    :param xy_pos: Posición en la habitación.
+    :param collide_groups: Grupo de obstáculos por los que no se puede pasar.
+    :param blow_groups: Grupos de sprites donde todos los sprites explotan.
+    :param groups: Grupos de sprites.
+    :param xy_pixels: Posición en píxeles.
     """
 
     bomb = crop(load_image("textures/room/bomb.png").subsurface(0, 0, 48, 48))
     bomb_animation = load_image("textures/room/bomb_explosion.png")
     explosion_sounds: list[pg.mixer.Sound] = [load_sound(f"sounds/explosion{i}.mp3") for i in range(1, 4)]
 
-    explosion_delay: int | float = 2.5  # Задержка перед взрывом в секундах
-    collide_by_player_delay: int | float = 0.5  # Задержка перед тем, как будут обрабатываться столкновения с ГГ
-    explosion_radius: int | float = 1.25 * CELL_SIZE  # Радиус взрыва в пикселях
+    explosion_delay: int | float = 2.5  # Retraso antes de la explosión en segundos.
+    collide_by_player_delay: int | float = 0.5  # Retraso antes de que se procesen las colisiones con el personaje principal.
+    explosion_radius: int | float = 1.25 * CELL_SIZE  # Radio de explosión en píxeles.
     explosion_fps: int = 30
 
     def __init__(self,
@@ -50,7 +50,7 @@ class BlowBomb(MovableItem):
 
     def update(self, delta_t: float):
         """
-        :param delta_t: Время с прошлого кадра.
+        :param delta_t: Tiempo transcurrido desde el último fotograma.
         """
         if self.blowed:
             self.animation.update(delta_t)
@@ -68,7 +68,7 @@ class BlowBomb(MovableItem):
 
     def blow_up(self):
         """
-        Подрыв себя.
+        Detonar a sí mismo.
         """
         self.blowed = True
         center = self.rect.center

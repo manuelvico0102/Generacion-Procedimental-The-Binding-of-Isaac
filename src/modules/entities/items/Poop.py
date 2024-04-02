@@ -9,11 +9,11 @@ from src.modules.BaseClasses import DestroyableItem
 
 class Poop(DestroyableItem):
     """
-    Класс Poop'a.
+    Clase Poop.
 
-    :param xy_pos: Позиция в комнате.
-    :param *groups: Остальные группы спрайтов.
-    :param collidable: Можно ли столкнуться с объектом (непроходимый ли).
+    :param xy_pos: Posición en la habitación.
+    :param *groups: Otros grupos de sprites.
+    :param collidable: Indica si se puede colisionar con el objeto (si es atravesable o no).
     """
 
     poops: pg.Surface = load_image("textures/room/poops.png")
@@ -35,16 +35,16 @@ class Poop(DestroyableItem):
 
     def set_image(self):
         poop_type = random.choices(list(range(0, 5)), [0.90, 0.045, 0.045, 0.005, 0.005])[0]
-        # Добавить лут в self.treasure, если текстурка из последних двух
+        # Agregar botín a self.treasure si la textura es de los últimos dos
         texture_x = poop_type * CELL_SIZE
         self.stages = [Poop.poops.subsurface(texture_x, y * CELL_SIZE, CELL_SIZE, CELL_SIZE) for y in range(5)]
         self.image = self.stages[0]
 
     def hurt(self, damage: int):
         """
-        Нанесение урона Poop'y.
+        Método para aplicar daño a Poop.
 
-        :param damage: сколько урона.
+        :param damage: Cantidad de daño.
         """
         if not DestroyableItem.hurt(self, damage):
             return
@@ -63,7 +63,7 @@ class Poop(DestroyableItem):
 
     def destroy(self):
         """
-        Уничтожение Poop после взрыва/поломки.
+        Destrucción de Poop después de la explosión/rotura.
         """
         DestroyableItem.destroy(self)
         self.image = self.stages[4]

@@ -6,14 +6,14 @@ from src.modules.BaseClasses import BaseArtifact
 
 class FreshMeat(BaseArtifact):
     """
-    Свежее мясо.
+    FreshMeat.
 
-    :param xy_pixels: Центр
+    :param xy_pixels: Centro
     """
 
     image = load_image("textures/artifacts/fresh_meat.png")
 
-    mode = BaseArtifact.modes["add"]  # Метод применения к персонажу (сложение или умножение).
+    mode = BaseArtifact.modes["add"]  # Método de aplicación a un item (suma o multiplicación).
 
     boosts = {
         "max_hp": 1,

@@ -10,11 +10,11 @@ from src.modules.characters.parents import Player
 
 class Web(BaseItem):
     """
-    Класс паутинки, которая замедляет.
+    Clase de la telaraña que ralentiza.
 
-    :param xy_pos: Позиция в комнате.
-    :param groups: Группы спрайтов.
-    :param colliadble: Замедляет ли.
+    :param xy_pos: Posición en la habitación.
+    :param groups: Grupos de sprites.
+    :param colliadble: Indica si es colisionable.
     """
 
     webs: list[pg.Surface] = [load_image("textures/room/web.png").subsurface(x * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE)
@@ -41,7 +41,7 @@ class Web(BaseItem):
 
     def blow(self):
         """
-        Взрыв (поломка) паутины.
+        Explosión (destrucción) de la telaraña.
         """
         self.collidable = False
         self.image = Web.destoryed
@@ -55,7 +55,7 @@ class Web(BaseItem):
 
     def reset_collides_sprites(self):
         """
-        Обнуление списка столкновений и возврат коэфициента скорости.
+        Reinicia la lista de colisiones y restablece el coeficiente de velocidad.
         """
         for sprite in self.collide_sprites:
             sprite: MoveSprite
@@ -63,9 +63,9 @@ class Web(BaseItem):
         self.collide_sprites.clear()
 
     def collide(self, other: MoveSprite):
-        # Изменить MovingEnemy на MainCharacter или просто добавить MainCharacter?
-        # Работает уже лучше, потому что коэф есть, но он с задержкой убирается,
-        # можно сделать Web.clear_collides_delay меньше.
+        # Cambiar MovingEnemy por MainCharacter o simplemente agregar MainCharacter?
+        # Funciona mejor ahora porque hay un coeficiente, pero se elimina con retraso,
+        # se puede reducir Web.clear_collides_delay.
         if self.collidable and isinstance(other, (MovingEnemy, MovableItem, Player)):
             if other not in self.collide_sprites:
                 self.collide_sprites.append(other)

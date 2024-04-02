@@ -23,7 +23,7 @@ class Duke(MovingEnemy):
                  tear_collide_groups: tuple[pg.sprite.AbstractGroup, ...],
                  hp_bar_group: pg.sprite.AbstractGroup,
                  speed: int | float,
-                 *groups: pg.sprite.AbstractGroup):  # = True чтобы сделать летающим
+                 *groups: pg.sprite.AbstractGroup):  # = True para hacerlo volar
         flyable = True
         hp: int = 40
         damage_from_blow: int = 10
@@ -75,9 +75,9 @@ class Duke(MovingEnemy):
 
     def move_back(self, rect: pg.Rect):
         """
-        Обработка коллизии и изменение скоростей при столкновении.
+        Procesamiento de colisiones y cambio de velocidades al colisionar.
 
-        :param rect: Rect того, с чем было столкновение.
+        :param rect: Rectángulo con el que hubo colisión.
         """
         # self.x_center, self.y_center = self.x_center_last, self.y_center_last
         # self.rect.center = self.x_center, self.y_center

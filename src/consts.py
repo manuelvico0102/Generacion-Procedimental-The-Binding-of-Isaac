@@ -5,7 +5,7 @@ import pygame as pg
 
 class FloorsTypes(Enum):
     """
-    Констатны типов этажей.
+    Constantes de tipos de pisos.
     """
     BASEMENT: str = "basement"
     CAVES: str = "caves"
@@ -17,7 +17,7 @@ class FloorsTypes(Enum):
 
 class RoomsTypes(Enum):
     """
-    Константы типов комнат (изменить на какой-нибудь рандом?).
+    Constantes de tipos de habitaciones (¿cambiar a algún valor aleatorio?).
     """
     EMPTY: str = "empty"
     DEFAULT: str = "default"
@@ -30,8 +30,8 @@ class RoomsTypes(Enum):
 
 class Moves(Enum):
     """
-    Возможные направления (x, y) (делать сложение).
-    Верхний левый угол — начало координат.
+     Posibles direcciones (x, y) (hacer suma).
+     La esquina superior izquierda es el origen.
     """
     UP = (0, -1)
     DOWN = (0, 1)
@@ -45,7 +45,7 @@ class Moves(Enum):
 
 class DoorsCoords(Enum):
     """
-    Возможные расположения дверей в комнате (x, y)
+    Posibles coordenadas de las puertas en la habitación (x, y)
     """
     UP = (6, -1)
     DOWN = (6, 7)
@@ -55,7 +55,7 @@ class DoorsCoords(Enum):
 
 class FirePlacesTypes(Enum):
     """
-    Виды костров.
+    Tipos de fogatas.
     """
     DEFAULT = 'default'
     RED = 'red'
@@ -63,30 +63,30 @@ class FirePlacesTypes(Enum):
 
 class HeartsTypes(Enum):
     """
-    Виды сердец персонажа.
+    Tipos de corazones del personaje.
     """
     RED = 'red'
     BLUE = 'blue'
     BLACK = 'black'
 
 
-FPS = 60                                          # А может 59.98?
-WIDTH, HEIGHT = 1280, 960                         # Весь экран
-GAME_WIDTH, GAME_HEIGHT = 1280, 812               # Часть экрана с игрой
-STATS_WIDTH, STATS_HEIGHT = 1280, 148             # Часть экрана с статой (хп, карта, деньги итп)
-ROOM_WIDTH, ROOM_HEIGHT = 13, 7                   # В клетках
-WALL_SIZE = 133                                   # Размер стены текстурок комнаты (пиксели)
-CELL_SIZE = 78                                    # Размер клетки комнаты (пиксели)
-MINIMAP_CELL_WIDTH, MINIMAP_CELL_HEIGHT = 41, 21  # Размер клетки на миникарте
-MINIMAP_WIDTH, MINIMAP_HEIGHT = 410, 126          # Размер миникарты (10x6)
+FPS = 60                                          # O tal vez 59.98?
+WIDTH, HEIGHT = 1280, 960                         # Pantalla completa
+GAME_WIDTH, GAME_HEIGHT = 1280, 812               # Parte de la pantalla del juego
+STATS_WIDTH, STATS_HEIGHT = 1280, 148             # Parte de la pantalla con una estadística (hp, mapa, dinero, etc.)
+ROOM_WIDTH, ROOM_HEIGHT = 13, 7                   # En celdas
+WALL_SIZE = 133                                   # Tamaño de la pared de la textura de la habitación (píxeles)
+CELL_SIZE = 78                                    # Tamaño de la celda de la habitación (píxeles)
+MINIMAP_CELL_WIDTH, MINIMAP_CELL_HEIGHT = 41, 21  # Tamaño de la celda de la minimapa (píxeles)
+MINIMAP_WIDTH, MINIMAP_HEIGHT = 410, 126          # Tamaño de la minimapa (10x6)
 
-MOVE_TO_NEXT_ROOM = pg.USEREVENT + 1              # Переход между комнатами
-MOVE_TO_NEXT_LEVEL = pg.USEREVENT + 2             # Переход на следующий этаж
-PICKUP_LOOT = pg.USEREVENT + 3                    # Подбор лута (бомба, ключ, монета etc)
-PICKUP_ART = pg.USEREVENT + 4                     # Подбор артефакта
-BUY_ITEM = pg.USEREVENT + 5                       # Покупка в магазине
-USE_BOMB = pg.USEREVENT + 6                       # Установка бомбы под персонажем
-GAME_OVER = pg.USEREVENT + 7                      # Конец игры
-GG_HURT = pg.USEREVENT + 8                        # ГГ получил урон
-USE_KEY = pg.USEREVENT + 9                        # Использование ключа для открытия двери
-DEATH_ENEMY = pg.USEREVENT + 10                   # Враг умер.
+MOVE_TO_NEXT_ROOM = pg.USEREVENT + 1              # Transición entre habitaciones
+MOVE_TO_NEXT_LEVEL = pg.USEREVENT + 2             # Pasar al siguiente nivel
+PICKUP_LOOT = pg.USEREVENT + 3                    # Selección de botín (bombas, monedas, llaves, etc.)
+PICKUP_ART = pg.USEREVENT + 4                     # Recogida de artefactos
+BUY_ITEM = pg.USEREVENT + 5                       # Compra en tienda
+USE_BOMB = pg.USEREVENT + 6                       # Colocar una bomba debajo del personaje
+GAME_OVER = pg.USEREVENT + 7                      # Fin del juego
+GG_HURT = pg.USEREVENT + 8                        # Personaje principal herido
+USE_KEY = pg.USEREVENT + 9                        # Usar una llave para abrir una puerta
+DEATH_ENEMY = pg.USEREVENT + 10                   # El enemigo esta muerto

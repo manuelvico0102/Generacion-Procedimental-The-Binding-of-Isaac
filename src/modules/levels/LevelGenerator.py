@@ -1,6 +1,6 @@
 """
-Генератор этажа.
-Вызывать generate_level(width, height, rooms) для получения карты уровня.
+Generador de piso.
+Llamar a generate_level(width, height, rooms) para obtener un mapa del nivel.
 """
 
 import random
@@ -11,14 +11,14 @@ from src.utils.graph import make_neighbors_graph
 from src.consts import RoomsTypes, Moves
 
 
-# Оптимизировать это, проложив путь от старта до всех возможных точек и проверить, что все точки задействованы.
+# Optimice esto trazando una ruta desde el inicio hasta todos los puntos posibles y verificando que todos los puntos estén involucrados.
 def all_rooms_have_path_to_start(rooms: list[list[RoomsTypes | str]], *, ignore_secret: bool = True) -> bool:
     """
-    Проверка, все ли комнаты имеют путь до стартовой комнаты.
+     Comprobando si todas las habitaciones tienen un camino a la sala de inicio.
 
-    :param rooms: Двумерный массив значений типов комнат.
-    :param ignore_secret: Игнорировать ли секретную комнату.
-    :return: Все ли комнаты имеют путь до стартовой комнаты.
+     :param rooms: matriz bidimensional de valores de RoomsTypes.
+     :param ignore_secret: si se ignora la habitación secreta.
+     :return: ¿Todas las habitaciones tienen un camino hacia la sala de inicio?
     """
     graph = make_neighbors_graph(rooms, ignore_secret=ignore_secret)
     ignored = (RoomsTypes.EMPTY, RoomsTypes.SECRET)
@@ -34,14 +34,14 @@ def has_path_to_start(start_pos: tuple[int, int], rooms: list[list[RoomsTypes | 
                       *,
                       ignore_secret: bool = True, graph: dict[tuple[int, int], list[tuple[int, int]]] = None) -> bool:
     """
-    Проверка, можно ли дойти от клетки до стартовой комнаты.
+     Comprobar si es posible caminar desde la celda hasta la sala de salida.
 
-    :param start_pos: Позиция клетки, из которой начинается путь.
-    :param rooms: Двумерный массив значений типов комнат.
-    :param ignore_secret: Игнорировать ли секретную комнату.
-    :param graph: Графоподобный словарь (передаётся для того, чтобы не пересоздавать его на проверку каждой комнаты).
-    :return: Все ли комнаты имеют путь до стартовой комнаты.
-    """
+     :param start_pos: La posición de la celda desde la que comienza la ruta.
+     :param rooms: matriz bidimensional de valores de RoomTypes.
+     :param ignore_secret: si se ignora la habitación secreta.
+     :param graph: un diccionario similar a un gráfico (transmitido para no recrearlo para verificar cada habitación).
+     :return: ¿Todas las habitaciones tienen un camino hacia la sala de inicio?
+     """
     map_width, map_height = len(rooms[0]), len(rooms)
     end_pos = math.ceil(map_width / 2) - 1, math.ceil(map_height / 2) - 1,
     if graph is None:
@@ -62,15 +62,16 @@ def has_path_to_start(start_pos: tuple[int, int], rooms: list[list[RoomsTypes | 
 
 def set_secret_room(rooms: list[list[RoomsTypes | str]]) -> bool:
     """
-    Установка секретной комнаты.
+    Montar una habitación secreta.
 
-    :param rooms: Двумерный массив значений типов комнат.
-    :return: Успешно ли поставлена секретная комната.
+    :param rooms: matriz bidimensional de valores de RoomsTypes.
+    :return: ¿Se instaló correctamente la habitación secreta?
     """
     graph = make_neighbors_graph(rooms)
     is_okay = False
-    # Сначала ставит секретку там, где 4 соседа, потом там, где 3, потом там, где 2.
-    # Теперь работает медленнее :)
+
+    # Primero, coloca un secreto donde hay 4 vecinos, luego donde hay 3, luego donde hay 2.
+    # Ahora funciona más lento :)
     for neighbors_rooms in range(4, 1, -1):
         secrets = [room for room in graph if len(graph[room]) >= neighbors_rooms
                    and rooms[room[1]][room[0]] == RoomsTypes.DEFAULT]
@@ -89,25 +90,25 @@ def set_secret_room(rooms: list[list[RoomsTypes | str]]) -> bool:
 
 def set_special_rooms(rooms: list[list[RoomsTypes | str]]) -> bool:
     """
-    Расстановка специальных комнат (сокровищница, магазин, босс).
+    Disposición de salas especiales (tesorería, tienda, jefe).
 
-    :param rooms: Двумерный массив значений типов комнат.
-    :return: Успешно ли поставлены все специальные комнаты.
+    :param rooms: matriz bidimensional de valores de RoomsTypes.
+    :return: ¿Se han instalado correctamente todas las salas especiales?
     """
-    # Поиск комнат с одним соседом для установки сокровищницы, магазина и комнаты с боссом
+    # Busque habitaciones con un vecino para configurar una tesorería, una tienda y una sala de jefe
     graph = make_neighbors_graph(rooms, ignore_secret=True)
     solo = [room for room in graph if len(graph[room]) == 1 and rooms[room[1]][room[0]] == RoomsTypes.DEFAULT]
     if len(solo) < 3:
         return False
 
-    # Установка комнаты с боссом как можно дальше от места спавна
+    # Configura la sala del jefe lo más lejos posible de la ubicación de generación
     map_width, map_height = len(rooms[0]), len(rooms)
     spawn_x, spawn_y = math.ceil(map_width / 2) - 1, math.ceil(map_height / 2) - 1
     boss_x, boss_y = max(solo, key=lambda c: math.sqrt((spawn_x - c[0]) ** 2 + (spawn_y - c[1]) ** 2))
     rooms[boss_y][boss_x] = RoomsTypes.BOSS
     solo.remove((boss_x, boss_y))
 
-    # Случайная установка магазина и сокровищницы
+    # Colocación aleatoria de tienda y tesoro.
     random.shuffle(solo)
     for coords, room_type in zip(solo, (RoomsTypes.SHOP, RoomsTypes.TREASURE)):
         x, y = coords
@@ -118,16 +119,16 @@ def set_special_rooms(rooms: list[list[RoomsTypes | str]]) -> bool:
 
 def set_other_rooms(rooms: list[list[RoomsTypes | str]]) -> bool:
     """
-    Расстановка комнат, отличных от спавна и дефолтных.
+     Disposición de salas distintas a las de generación y predeterminadas.
 
-    :param rooms: Двумерный массив значений типов комнат.
-    :return: Успешно ли поставлены все комнаты.
+     :param rooms: matriz bidimensional de valores de RoomsTypes.
+     :return: ¿Se han instalado correctamente todas las salas?
     """
-    # Установка секретной комнаты
+    # Configuración de la sala secreta
     if not set_secret_room(rooms):
         return False
 
-    # Установка специальных комнат
+    # Configuración de las salas especiales
     if not set_special_rooms(rooms):
         return False
 
@@ -136,11 +137,11 @@ def set_other_rooms(rooms: list[list[RoomsTypes | str]]) -> bool:
 
 def set_default_rooms(rooms: list[list[RoomsTypes | str]], room_numbers: int) -> None:
     """
-    Расстановка RoomsTypes.DEFAULT и RoomsTypes.SPAWN на пустой карте.
+     Colocar RoomsTypes.DEFAULT y RoomsTypes.SPAWN en un mapa vacío.
 
-    :param rooms: Двумерный массив значений типов комнат (в этом случае - RoomsTypes.EMPTY).
-    :param room_numbers: Сколько комнат заполнить значением дефолтной комнаты.
-    :return: None
+     :param rooms: una matriz bidimensional de valores de RoomsTypes (en este caso, RoomsTypes.EMPTY).
+     :param room_numbers: cuántas habitaciones se deben llenar con el valor de habitación predeterminado.
+     :retorno: Ninguno
     """
 
     map_width, map_height = len(rooms[0]), len(rooms)
@@ -148,7 +149,7 @@ def set_default_rooms(rooms: list[list[RoomsTypes | str]], room_numbers: int) ->
     room_numbers -= 1
     rooms[cur_y][cur_x] = RoomsTypes.SPAWN
     moves = [move.value for move in Moves]
-    # Попытка сделать алгоритм "бегающей собаки" из какого-то видоса про генерацию уровней в Айзеке
+    # Un intento de crear un algoritmo de "perro corriendo" a partir de un vídeo sobre la generación de niveles en Isaac
     while room_numbers > 0:
         step_x, step_y = random.choice(moves)
         cur_x = max(0, min(map_width - 1, cur_x + step_x))
@@ -160,21 +161,21 @@ def set_default_rooms(rooms: list[list[RoomsTypes | str]], room_numbers: int) ->
 
 def generate_level(map_width: int, map_height: int, room_numbers: int) -> list[list[RoomsTypes | str]]:
     """
-    Генератор этажа (уровня).
+     Generador de piso (nivel).
 
-    :param map_width: ширина этажа.
-    :param map_height: высота этажа.
-    :param room_numbers: - количество комнат с учетом спавна, магазина, босса итд итп.
-    """
-    assert 3 <= map_width <= 10                        # Проверка размера карты
-    assert 3 <= map_height <= 10                       # Проверка размера карты
-    assert room_numbers >= 5                           # Спавн, магазин, сокровищница, босс, секретная комната
-    assert room_numbers < map_width * map_height - 3   # Возможно сгенерировать все комнаты
+     :param map_width: ancho del piso.
+     :param map_height: altura del piso.
+     :param room_numbers: - número de habitaciones teniendo en cuenta la generación, la tienda, el jefe, etc.
+     """
+    assert 3 <= map_width <= 10                        # Comprobando el tamaño de la tarjeta
+    assert 3 <= map_height <= 10                       # Comprobando el tamaño de la tarjeta
+    assert room_numbers >= 5                           # Generación, tienda, tesorería, jefe, habitación secreta.
+    assert room_numbers < map_width * map_height - 3   # Es posible generar todas las habitaciones.
 
     rooms = []
     successful_generation = False
     while not successful_generation:
-        # Генерация уровня, пока не появится подходящая планировка
+        # Generación de niveles hasta que aparezca un diseño adecuado
         rooms = [[RoomsTypes.EMPTY] * map_width for _ in range(map_height)]
         set_default_rooms(rooms, room_numbers)
         successful_generation = set_other_rooms(rooms)
@@ -184,11 +185,11 @@ def generate_level(map_width: int, map_height: int, room_numbers: int) -> list[l
 
 def print_map(rooms: list[list[RoomsTypes | str]]) -> None:
     """
-    Вывод карты в консоль.
+     Salida del mapa a la consola.
 
-    :param rooms: Двумерный массив значений типов комнат.
-    :return: None.
-    """
+     :param rooms: matriz bidimensional de valores de RoomsTypes.
+     :return: Ninguno.
+     """
     for row in rooms:
         for col in row:
             print(col.value.center(8, ' '), end=' ')

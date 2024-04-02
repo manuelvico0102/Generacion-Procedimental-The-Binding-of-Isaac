@@ -7,13 +7,13 @@ from src.utils.funcs import cell_to_pixels
 
 class MoveSprite(BaseSprite):
     """
-    Спрайт, который будет двигаться 100%.
+    Sprite que se moverá al 100%.
 
-    :param xy_pos: Позиция в комнате.
-    :param collide_groups: Группы спрайтов, через спрайты которых нельзя пройти.
-    :param groups: Группы спрайтов.
-    :param acceleration: Ускорение торможения в клетках/секунду.
-    :param xy_pixels: Позиция в пикселях.
+    :param xy_pos: Posición en la habitación.
+    :param collide_groups: Grupos de sprites con los que no se puede colisionar.
+    :param groups: Grupos de sprites.
+    :param acceleration: Aceleración de frenado en celdas/segundo.
+    :param xy_pixels: Posición en píxeles.
     """
 
     def __init__(self,
@@ -37,7 +37,7 @@ class MoveSprite(BaseSprite):
 
     def set_rect(self, width: int = None, height: int = None, up: int = 0, left: int = 0):
         """
-        Установка объекта в центре своей клетки.
+        Establece el objeto en el centro de su celda.
         """
         BaseSprite.set_rect(self, width, height, up, left)
         if (self.x_center, self.y_center) != cell_to_pixels((self.x, self.y)):
@@ -45,10 +45,10 @@ class MoveSprite(BaseSprite):
 
     def move(self, delta_t: float, use_a: bool = True):
         """
-        Перемещение сущности.
+        Movimiento de la entidad.
 
-        :param delta_t: Время с прошлого кадра.
-        :param use_a: Крч, для ускорения/торможения ГГ.
+        :param delta_t: Tiempo desde el último fotograma.
+        :param use_a: Indica si se debe aplicar aceleración/frenado al personaje.
         """
         if self.a and use_a:
             if self.vx:
@@ -77,21 +77,21 @@ class MoveSprite(BaseSprite):
 
     def move_back(self, rect: pg.Rect):
         """
-        Обработка коллизии (отход нахад)
+        Manejo de colisión (retroceso)
 
-        :param rect: Rect того, с чем было столкновение.
+        :param rect: Rectángulo de la colisión.
         """
-        # Придумать как-то отбрасывать на край объекта вместо переноса на прошлую позицию?
+        # ¿Cómo podemos hacer que el objeto rebote en el borde en lugar de volver a la posición anterior?
 
         self.x_center, self.y_center = self.x_center_last, self.y_center_last
         self.rect.center = self.x_center, self.y_center
 
     def set_speed(self, vx: int | float, vy: int | float):
         """
-        Задание скорости движения.
+        Establece la velocidad de movimiento.
 
-        :param vx: Скорость по горизонтали в клетках/секунду.
-        :param vy: Скорость по вертикали в клетках/секунду.
+        :param vx: Velocidad horizontal en celdas/segundo.
+        :param vy: Velocidad vertical en celdas/segundo.
         """
         self.vx = vx
         self.vy = vy

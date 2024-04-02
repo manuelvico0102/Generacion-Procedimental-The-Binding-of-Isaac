@@ -10,13 +10,13 @@ from src.modules.characters.parents import Player
 
 class Level:
     """
-    Класс уровня/этажа.
+     Nivel/clase de suelo.
 
-    :param floor_type: Тип этажа.
-    :param main_hero: Главный персонаж.
-    :param width: Максимальная ширина расстановки комнат.
-    :param height: Максимальная высота расстановки комнат.
-    """
+     :param Floor_type: Tipo de piso.
+     :param main_hero: Personaje principal.
+     :param width: ancho máximo de la disposición de la habitación.
+     :param height: altura máxima de la disposición de la habitación.
+     """
     def __init__(self,
                  floor_type: consts.FloorsTypes | str,
                  main_hero: Player,
@@ -35,7 +35,7 @@ class Level:
 
     def setup_level(self):
         """
-        Генерация комнат уровня и расстановка дверей.
+        Generación de cuartos de nivel y colocación de puertas.
         """
         self.level_map = generate_level(self.width, self.height, 15)
         for y, row in enumerate(self.level_map):
@@ -58,12 +58,12 @@ class Level:
 
     def get_doors(self, cur_x: int, cur_y: int) -> list[tuple[consts.DoorsCoords, consts.RoomsTypes]]:
         """
-        Получение координат дверей и необходимой информации для установки текстурки.
+         Obtención de las coordenadas de las puertas y la información necesaria para la instalación de la textura.
 
-        :param cur_x: Координата текущей комнаты.
-        :param cur_y: Координата текущей комнаты.
-        :return: Лист с парами (координаты, тип комнаты).
-        """
+         :param cur_x: Coordenada de la habitación actual.
+         :param cur_y: Coordenada de la habitación actual.
+         :return: Hoja con pares (coordenadas, tipo de habitación).
+         """
         coords = get_neighbors_coords(cur_x, cur_y, self.level_map)
         doors = []
         for room_x, room_y in coords:
@@ -76,7 +76,7 @@ class Level:
                 direction = consts.DoorsCoords.DOWN
             elif room_y < cur_y:
                 direction = consts.DoorsCoords.UP
-            assert direction is not None, f'Не удалось получить расположение двери'
+            assert direction is not None, f'No se pudo obtener la ubicación de la puerta'
 
             if (self.level_map[cur_y][cur_x] in (consts.RoomsTypes.TREASURE, consts.RoomsTypes.BOSS,
                                                  consts.RoomsTypes.SECRET, consts.RoomsTypes.SHOP)
@@ -89,16 +89,16 @@ class Level:
 
     def get_rooms(self) -> list[list[Room | None]]:
         """
-        Получение всех комнат этажа в виде двумерного массива.
+         Recuperar todas las habitaciones de un piso como una matriz bidimensional.
         """
         return self.rooms
 
     def change_rooms_state(self, cur_x: int, cur_y: int):
         """
-        Изменение статуса видимости текущей и соседних комнат.
+         Cambia el estado de visibilidad de las habitaciones actuales y vecinas.
 
-        :param cur_x: Координата текущей комнаты.
-        :param cur_y: Координата текущей комнаты.
+         :param cur_x: Coordenada de la habitación actual.
+         :param cur_y: Coordenada de la habitación actual.
         """
         self.rooms[cur_y][cur_x].update_detection_state(is_active=True)
         coords = get_neighbors_coords(cur_x, cur_y, self.level_map)
@@ -110,9 +110,9 @@ class Level:
 
     def move_to_next_room(self, direction: consts.Moves):
         """
-        Вход в другую комнату.
+         Entrada a otra habitación.
 
-        :param direction: Направление движения.
+         :param direction: Dirección del movimiento.
         """
         x, y = direction.value
         x, y = self.current_room.x + x, self.current_room.y + y
@@ -133,12 +133,12 @@ class Level:
 
     def moving_room_animation(self, from_room: Room, to_room: Room, direction: consts.Moves):
         """
-        Старт анимации перехода между комнатами.
+         Iniciar animación de transición entre habitaciones.
 
-        :param from_room: Из какой комнаты.
-        :param to_room: В какую комнату.
-        :param direction: Направление.
-        """
+         :param from_room: Desde qué habitación.
+         :param to_room: Qué habitación.
+         :param direction: Dirección.
+         """
         self.is_moving = MovingRoomAnimation(from_room, to_room, direction)
 
     def update_main_hero_collide_groups(self):

@@ -7,12 +7,12 @@ from src.modules.BaseClasses.Based.MoveSprite import MoveSprite
 
 class DestroyableItem(BaseItem):
     """
-    Ломаемый слезами и бомбами предмет.
+    Objeto destruible por lágrimas y bombas.
 
-    :param xy_pos: Позиция в комнате.
-    :param groups: Группы спрайтов.
-    :param collidable: Мешает ли проходу через себя (непроходимый ли).
-    :param hurtable: Наносит ли урон при прикосновении.
+    :param xy_pos: Posición en la habitación.
+    :param groups: Grupos de sprites.
+    :param collidable: ¿Obstaculiza el paso a través de sí mismo (impenetrable)?
+    :param hurtable: ¿Inflige daño al tocarlo?
     """
 
     def __init__(self,
@@ -26,9 +26,9 @@ class DestroyableItem(BaseItem):
 
     def collide(self, other: MoveSprite) -> bool:
         """
-        Обработка столкновений.
-        :param other: Кто столкнулся.
-        :return: Было ли столковение.
+        Manejo de colisiones de colisiones.
+        :param other: El objeto con el que colisionó.
+        :return: Si hubo colisión o no.
         """
         if not self.is_alive or not BaseItem.collide(self, other):
             return False
@@ -42,7 +42,7 @@ class DestroyableItem(BaseItem):
 
     def destroy(self):
         """
-        Поломка объекта.
+        Destruye el objeto, dejando caer el botín si es necesario y desactivando la colisión y el daño.
         """
         self.collidable = False
         self.hurtable = False
@@ -51,21 +51,21 @@ class DestroyableItem(BaseItem):
 
     def drop_loot(self):
         """
-        Выброс лута после поломки.
+        Lanzar botín después de romperse.
         """
         pass
 
     def blow(self):
         """
-        Взрыв объекта.
+        Explosión del objeto.
         """
         self.hurt(self.hp)
 
     def hurt(self, damage: int) -> bool:
         """
-        Принятие урона.
-        :param damage: Сколько урона.
-        :return: Был ли нанесён урон.
+        Recibir daño.
+        :param damage: Cantidad de daño.
+        :return: Si se ha recibido daño o no.
         """
         if not self.is_alive:
             return False

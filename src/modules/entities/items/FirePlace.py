@@ -54,14 +54,14 @@ class FireTextures(FireImage):
 
 class FirePlace(DestroyableItem, ShootingEnemy, FireTextures):
     """
-    Костёр. Бьётся. Ломается.
+    Kostyor. Late. Se destruye.
 
-    :param xy_pos: Позиция в комнате.
-    :param groups: Группы спрайтов.
-    :param fire_type: Тип огня.
-    :param tear_collide_groups: Группы, с которыми сталкивается слеза костра, если костёр враждебный.
-    :param main_hero: Главный герой, если костёр враждебный.
-    :param hurtable: Наносит ли урон при касании.
+    :param xy_pos: Posición en la habitación.
+    :param groups: Grupos de sprites.
+    :param fire_type: Tipo de fuego.
+    :param tear_collide_groups: Grupos con los que colisiona la lágrima del kostyor, si el kostyor es hostil.
+    :param main_hero: Héroe principal, si el fuego es hostil.
+    :param hurtable: Si causa daño al ser tocado.
     """
 
     max_hp = 10
@@ -98,8 +98,8 @@ class FirePlace(DestroyableItem, ShootingEnemy, FireTextures):
         self.is_alive = True
 
         self.set_image()
-        # Криво дамажит из-за того, что image имеет высоту CELL_SIZE * 1.25,
-        # и я хз как отрисовать image не в левом верхнем углу rect'a
+        # El daño es incorrecto debido a que la imagen tiene una altura de CELL_SIZE * 1.25,
+        # y no sé cómo dibujar la imagen en una posición diferente a la esquina superior izquierda del rectángulo.
         self.set_rect()
 
         self.event_rect = pg.Rect(0, 0, 50, 50)
@@ -119,7 +119,7 @@ class FirePlace(DestroyableItem, ShootingEnemy, FireTextures):
 
     def update_image(self):
         """
-        Обновление изображения, установка на Surface дров и потом огня, если горит.
+        Actualiza la imagen, establece las superficies de la madera y luego del fuego si está encendido.
         """
         self.image = pg.Surface((CELL_SIZE, CELL_SIZE * 1.25), pg.SRCALPHA, 32)
         self.image.blit(self.woods[not self.is_alive], (0, CELL_SIZE * 0.25))
@@ -142,16 +142,16 @@ class FirePlace(DestroyableItem, ShootingEnemy, FireTextures):
 
     def shot(self):
         """
-        Стрельба в ГГ, если костёр стреляющий.
+        Disparo al jugador principal si el fuego es de tipo disparador.
         """
         if self.is_alive and ShootingEnemy.shot(self):
             FireTextures.fireplace_shot.play()
 
     def hurt(self, damage: int):
         """
-        Нанесение урона костру.
+        Inflictar daño a la hoguera.
 
-        :param damage: Сколько урона.
+        :param damage: Cantidad de daño.
         """
         if not DestroyableItem.hurt(self, damage):
             return
@@ -173,7 +173,7 @@ class FirePlace(DestroyableItem, ShootingEnemy, FireTextures):
 
     def destroy(self):
         """
-        Уничтожение костра после взрыва/поломки.
+        Destrucción del hoguera después de la explosión/rotura.
         """
         DestroyableItem.destroy(self)
         self.update_image()
@@ -181,8 +181,8 @@ class FirePlace(DestroyableItem, ShootingEnemy, FireTextures):
 
     def draw_tears(self, screen: pg.Surface):
         """
-        Отрисовка слёз, если костёр стреляющий.
-        :param screen: Surface.
+        Dibuja las lágrimas si el fuego es de tipo disparador.
+        :param screen: Superficie.
         """
         if self.fire_type == FirePlacesTypes.RED:
             ShootingEnemy.draw_tears(self, screen)

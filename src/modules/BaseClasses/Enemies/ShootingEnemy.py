@@ -12,23 +12,23 @@ from src.modules.characters.parents import Player
 
 class ShootingEnemy(BaseEnemy):
     """
-    Стреляющий противник.
+    Enemigo que dispara.
 
-    :param xy_pos: Позиция спавна в клетках.
-    :param hp: Здоровье.
-    :param damage_from_blow: Урон получаемый от взрывов.
-    :param room_graph: Графоподобный словарь клеток в комнате.
-    :param main_hero: Главный персонаж (у него должен быть .rect)
-    :param enemy_collide_groups: Группы спрайтов, с которыми нужно обрабатывать столкновения этой сущности.
+    :param xy_pos: Posición de spawn en celdas.
+    :param hp: Salud.
+    :param damage_from_blow: Daño recibido por explosiones.
+    :param room_graph: Grafo de celdas en la habitación.
+    :param main_hero: Personaje principal (debe tener .rect).
+    :param enemy_collide_groups: Grupos de sprites con los que esta entidad puede colisionar.
 
-    :param shot_damage: Урон слезы.
-    :param shot_max_distance: Максимальная дальность полёта слезы в клетках.
-    :param shot_max_speed: Максимальная скорость полёта слезы в клетках.
-    :param shot_delay: Задержка между выстрелами.
-    :param tear_class: Класс слезы.
-    :param tear_collide_groups: Группы спрайтов, с которым нужно обрабатывать столкновения слёз.
+    :param shot_damage: Daño del disparo.
+    :param shot_max_distance: Máxima distancia de vuelo del disparo en celdas.
+    :param shot_max_speed: Máxima velocidad de vuelo del disparo en celdas.
+    :param shot_delay: Retraso entre disparos.
+    :param tear_class: Clase de la lágrima.
+    :param tear_collide_groups: Grupos de sprites con los que las lágrimas pueden colisionar.
 
-    :param groups: Группы спрайтов.
+    :param groups: Grupos de sprites.
     """
 
     def __init__(self,
@@ -59,9 +59,9 @@ class ShootingEnemy(BaseEnemy):
 
     def update(self, delta_t: float):
         """
-        Обновление врага, отмер времени для выстрела или движения.
+        Actualiza al enemigo, contando el tiempo para disparar o moverse.
 
-        :param delta_t: Время с прошлого кадра.
+        :param delta_t: Tiempo desde el último fotograma.
         """
         self.shot_ticks += delta_t
 
@@ -72,27 +72,27 @@ class ShootingEnemy(BaseEnemy):
 
     def draw_tears(self, screen: pg.Surface):
         """
-        Отрисовка слёз.
+        Dibuja las lágrimas.
         """
         self.tears.draw(screen)
 
     def shot(self) -> bool:
         """
-        Выстрел в сторону ГГ.
+        Disparo hacia el personaje principal.
 
-        :return: Выстрелил ли.
+        :return: Devuelve True si disparó.
         """
         # body
         x, y = self.main_hero.rect.center
         dx = x - self.rect.centerx
         dy = y - self.rect.centery
         distance = math.hypot(dx, dy)
-        if distance > self.shot_max_distance * CELL_SIZE or distance == 0:  # Стреляет тогда, когда уже вплотную, ну хз.
+        if distance > self.shot_max_distance * CELL_SIZE or distance == 0:  # Dispara cuando ya esta cerca
             return False
 
         self.shot_ticks = 0
-        vx = self.shot_max_speed * dx / distance + getattr(self, 'vx', 0)  # Учёт собственной скорости
-        vy = self.shot_max_speed * dy / distance + getattr(self, 'vy', 0)  # Учёт собственной скорости
+        vx = self.shot_max_speed * dx / distance + getattr(self, 'vx', 0)  # Teniendo en cuenta su propia velocidad
+        vy = self.shot_max_speed * dy / distance + getattr(self, 'vy', 0)  # Teniendo en cuenta su propia velocidad
         self.tear_class((self.x, self.y), self.rect.center, self.shot_damage, self.shot_max_distance, vx, vy,
                         self.tear_collide_groups, self.tears)
         return True

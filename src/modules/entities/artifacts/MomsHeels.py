@@ -6,9 +6,9 @@ from src.modules.BaseClasses import BaseArtifact
 
 class MomsHeels(BaseArtifact):
     """
-    Мамины туфли.
+    Moms Heels.
 
-    :param xy_pixels: Центр
+    :param xy_pixels: Centro
     """
 
     image = load_image("textures/artifacts/moms_heels.png")
