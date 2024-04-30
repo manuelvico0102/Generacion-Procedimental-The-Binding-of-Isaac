@@ -215,3 +215,26 @@ def fitness(rooms: list[list[RoomsTypes]]) -> float:
 
     
     return puntuacion
+
+def crossover(parent1: list[list[RoomsTypes]], parent2: list[list[RoomsTypes]]) -> list[list[RoomsTypes]]:
+    # Cruce por punto de corte (crossover) Este método elige un punto aleatorio en los cromosomas de los padres 
+    # y combina las partes antes y después de ese punto para producir los hijos.
+
+    # Seleccionar un punto de corte aleatorio, tanto en el eje x como en el y
+    crossover_point_x = random.randint(0, len(parent1[0]) - 1)
+    crossover_point_y = random.randint(0, len(parent1) - 1)
+
+    # Crear una nueva matriz para el hijo
+    child = [[None] * len(parent1[0]) for _ in range(len(parent1))]
+
+    # Copiar las partes antes y después del punto de corte del primer padre al hijo
+    for y in range(len(parent1)):
+        for x in range(len(parent1[0])):
+            if y < crossover_point_y or (y == crossover_point_y and x <= crossover_point_x):
+                child[y][x] = parent1[y][x]
+            else:
+                child[y][x] = parent2[y][x]
+    
+    #child = comprobaciones.fix_special_rooms(child)
+
+    return child
