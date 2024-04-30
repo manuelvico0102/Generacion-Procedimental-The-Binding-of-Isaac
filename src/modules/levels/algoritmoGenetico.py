@@ -238,3 +238,19 @@ def crossover(parent1: list[list[RoomsTypes]], parent2: list[list[RoomsTypes]]) 
     #child = comprobaciones.fix_special_rooms(child)
 
     return child
+
+def mutate(rooms: list[list[RoomsTypes]], mutation_rate: float) -> list[list[RoomsTypes]]:
+    # Intercambio de habitaciones
+    # Tal vez sea mejor especificar que no sea una habitación empty
+
+    mutated_rooms = [row[:] for row in rooms]   # Copiar la matriz de habitaciones
+
+    for i in range(len(rooms)):
+        for j in range(len(rooms[i])):
+            if random.random() < mutation_rate:
+                # Seleccionar dos ubicaciones aleatorias distintas
+                new_i, new_j = random.randint(0, len(rooms) - 1), random.randint(0, len(rooms[i]) - 1)
+                # Intercambiar las salas en las dos ubicaciones seleccionadas
+                mutated_rooms[i][j], mutated_rooms[new_i][new_j] = mutated_rooms[new_i][new_j], mutated_rooms[i][j]
+    
+    return mutated_rooms
