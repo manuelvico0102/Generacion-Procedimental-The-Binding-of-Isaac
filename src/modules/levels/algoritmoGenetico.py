@@ -182,3 +182,36 @@ def generate_initial_population(population_size: int, map_width: int, map_height
         rooms = generate_level(map_width, map_height, room_numbers)
         population.append(rooms)
     return population
+
+def fitness(rooms: list[list[RoomsTypes]]) -> float:
+    # Comprobar conectividad
+    # ¿Distancia entre la sala de inicio y la sala del jefe? + cantidad de bifurcaciones
+    # ¿Número de habitaciones secretas accesibles?
+    # En caso de que de malos resultados puedo cambiar la generacion inicial para que haya tiendas y habitaciones secretas desde un principio
+    puntuacion = 0
+
+    if all_rooms_have_path_to_start(rooms):
+        puntuacion += 100
+
+    if(comprobaciones.exists_special_room(rooms, RoomsTypes.BOSS)):
+        puntuacion += 50
+    
+    if(comprobaciones.get_number_of_roomtype(rooms, RoomsTypes.BOSS) > 1):
+        puntuacion -= 50
+
+    if comprobaciones.exists_special_room(rooms, RoomsTypes.TREASURE):
+        puntuacion += 10
+    
+    if comprobaciones.exists_special_room(rooms, RoomsTypes.SHOP):
+        puntuacion += 10
+
+    if comprobaciones.exists_special_room(rooms, RoomsTypes.SECRET):
+        puntuacion += 10
+        if comprobaciones.get_number_of_roomtype(rooms, RoomsTypes.SECRET) > 1:
+            puntuacion += 10
+
+    if comprobaciones.distance_between_start_and_boss(rooms) > 10:
+        puntuacion += 10
+
+    
+    return puntuacion
