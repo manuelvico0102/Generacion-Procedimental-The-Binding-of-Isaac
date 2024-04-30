@@ -254,3 +254,52 @@ def mutate(rooms: list[list[RoomsTypes]], mutation_rate: float) -> list[list[Roo
                 mutated_rooms[i][j], mutated_rooms[new_i][new_j] = mutated_rooms[new_i][new_j], mutated_rooms[i][j]
     
     return mutated_rooms
+
+def genetic_algorithm(population_size: int, map_width: int, map_height: int, room_numbers: int, generations: int) -> list[list[RoomsTypes]]:
+    population = generate_initial_population(population_size, map_width, map_height, room_numbers)
+    for _ in range(generations):
+        # Se selecciona los dos mejores individuos
+        fitness_scores = [(individual, fitness(individual)) for individual in population]
+        parents = [individual for individual, _ in sorted(fitness_scores, key=lambda x: x[1], reverse=True)[:2]]
+
+        # Se crean hijos a partir de los padres
+        children = [mutate(crossover(parents[0], parents[1]), mutation_rate=0.1) for _ in range(population_size - 2)]
+        population = parents + children
+
+    return max(population, key=fitness)
+
+def print_rooms(rooms):
+    for row in rooms:
+        print(' '.join(str(room) for room in row))
+
+def main():
+    # Ejemplo de uso
+    map_width = 10
+    map_height = 10
+    room_numbers = 20
+    population_size = 10
+    generations = 100
+
+    best_map = genetic_algorithm(population_size, map_width, map_height, room_numbers, generations)
+    for row in best_map:
+        print(row)
+
+    
+def main2():
+    # Caso de prueba 1
+    population = generate_initial_population(2, 10, 6, 15)
+    parent1 = population[0]
+    parent2 = population[1]
+
+    
+    """print("Padre 1:")
+    print_rooms(parent1)
+    print("\nPadre 2:")
+    print_rooms(parent2)"""
+
+    child = crossover(parent1, parent2)
+
+    """print("\nHijo:")
+    print_rooms(child)"""
+
+    return parent1, parent2, child
