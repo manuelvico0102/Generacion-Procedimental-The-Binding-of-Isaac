@@ -157,3 +157,63 @@ class Level:
             self.is_moving.render(screen)
         else:
             self.current_room.render(screen)
+
+    def change_all_rooms_state(self):
+        for row in self.rooms:
+            for room in row:
+                if room:
+                    room.update_detection_state(is_spotted=True)
+
+    def get_number_of_rooms(self, nivel: consts.FloorsTypes) -> int:
+        """
+         Selección del número de habitaciones que tendrá el piso por nivel.
+
+         :param nivel: Nivel de piso.
+         :return: Número de habitaciones.
+        """
+
+        nRooms = 10
+
+        if nivel == consts.FloorsTypes.BASEMENT:
+            nRooms += 2
+        elif nivel == consts.FloorsTypes.CAVES:
+            nRooms += 3
+        elif nivel == consts.FloorsTypes.CATACOMBS:
+            nRooms += 4
+        elif nivel == consts.FloorsTypes.DEPTHS:
+            nRooms += 5
+        elif nivel == consts.FloorsTypes.BLUEWOMB:
+            nRooms += 6
+        elif nivel == consts.FloorsTypes.WOMB:
+            nRooms += 7
+        
+        return nRooms
+    
+    # constructor pasando mapa de nivel
+    def constructor(self, floor_type: consts.FloorsTypes | str, main_hero: Player, level_map: list[list[consts.RoomsTypes | str]], width: int = 10, height: int = 6):
+        self.floor_type = floor_type
+        self.main_hero = main_hero
+        self.width = width
+        self.height = height
+        self.level_map = level_map                     
+        self.rooms: list[list[Room | None]] = [[None] * width for _ in range(height)]
+        self.current_room: Room | None = None
+        self.is_moving: bool | MovingRoomAnimation = False
+
+        self.load_level_map(level_map)
+
+    # cargar mapa level_map
+    def load_level_map(self, level_map: list[list[consts.RoomsTypes | str]]):
+        self.level_map = level_map
+        for y, row in enumerate(self.level_map):
+            for x, room_type in enumerate(row):
+                if room_type == consts.RoomsTypes.EMPTY:
+                    continue
+                room = Room(self.floor_type, room_type, (x, y), self.main_hero, None)
+                room.setup_doors(self.get_doors(x, y))
+                if room_type == consts.RoomsTypes.SPAWN:
+                    self.current_room = room
+                    
+                self.rooms[y][x] = room
+        assert self.current_room is not None and self.current_room.room_type == consts.RoomsTypes.SPAWN
+        self.change_rooms_state(self.current_room.x, self.current_room.y)
