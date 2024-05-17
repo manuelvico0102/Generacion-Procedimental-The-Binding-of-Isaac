@@ -30,5 +30,5 @@ class Minimap:
                     surface.blit(cell, (x * MINIMAP_CELL_WIDTH, y * MINIMAP_CELL_HEIGHT))
         self.minimap = surface
 
-    def render(self, screen: pg.Surface):
-        screen.blit(self.minimap, (MINIMAP_CELL_WIDTH, MINIMAP_CELL_HEIGHT // 2))
+    def render(self, screen: pg.Surface, width: int = MINIMAP_CELL_WIDTH, height: int = MINIMAP_CELL_HEIGHT // 2):
+        screen.blit(self.minimap, (width, height))

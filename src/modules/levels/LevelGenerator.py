@@ -10,6 +10,7 @@ import collections
 from src.utils.graph import make_neighbors_graph
 from src.consts import RoomsTypes, Moves
 
+from src.modules.levels.algoritmoGenetico import genetic_algorithm
 
 # Optimice esto trazando una ruta desde el inicio hasta todos los puntos posibles y verificando que todos los puntos estén involucrados.
 def all_rooms_have_path_to_start(rooms: list[list[RoomsTypes | str]], *, ignore_secret: bool = True) -> bool:
@@ -176,9 +177,11 @@ def generate_level(map_width: int, map_height: int, room_numbers: int) -> list[l
     successful_generation = False
     while not successful_generation:
         # Generación de niveles hasta que aparezca un diseño adecuado
-        rooms = [[RoomsTypes.EMPTY] * map_width for _ in range(map_height)]
-        set_default_rooms(rooms, room_numbers)
-        successful_generation = set_other_rooms(rooms)
+        #rooms = [[RoomsTypes.EMPTY] * map_width for _ in range(map_height)]
+        #set_default_rooms(rooms, room_numbers)
+        #generate_map(rooms, room_numbers)
+        rooms = genetic_algorithm(10, map_width, map_height, room_numbers, 50)
+        successful_generation = True#set_other_rooms(rooms)
     assert rooms
     return rooms
 

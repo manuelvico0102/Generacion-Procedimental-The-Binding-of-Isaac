@@ -22,7 +22,7 @@ class Fly(MovingEnemy, ShootingEnemy):
                  enemy_collide_groups: tuple[pg.sprite.AbstractGroup, ...],
                  tear_collide_groups: tuple[pg.sprite.AbstractGroup, ...],
                  *groups: pg.sprite.AbstractGroup):
-        hp: int = 10000
+        hp: int = 10
         speed: int | float = 1 + 1.3 * random.random()
         damage_from_blow: int = 10000
         move_update_delay: int | float = 1

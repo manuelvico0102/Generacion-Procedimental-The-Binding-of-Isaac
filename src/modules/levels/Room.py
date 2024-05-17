@@ -15,12 +15,14 @@ from src.modules.entities.artifacts import (Dinner, FreshMeat, GreenSyringe, Gre
                                             PurpleSyringe, RedSyringe, WhiteSyringe)
 from src.modules.levels.Border import Border
 from src.modules.enemies import Maw, Guts, Host
+from src.modules.enemies.Fly import Fly
 from src.utils.funcs import pixels_to_cell, load_image
 from src.utils.graph import make_neighbors_graph
 from src import consts
 
 from src.modules.characters.parents import Player
 
+from src.modules.levels.automataCelular import cellular_automatan
 
 class RoomTextures:
     controls_hint: pg.Surface = load_image("textures/room/controls.png")
@@ -115,7 +117,7 @@ class Room(RoomTextures):
 
         self.setup_background()
         self.setup_borders()
-        self.setup_entities()
+        self.setup_entities_ac()
         self.setup_graph()
 
     def setup_background(self):
@@ -534,3 +536,112 @@ class Room(RoomTextures):
             PickHeart(xy_pos, (self.colliadble_group, self.movement_borders, self.other), self.other)
         elif chance < 0.20:
             PickKey(xy_pos, (self.colliadble_group, self.movement_borders, self.other), self.other)
+
+    
+    def generar_habitaciones_especiales(self):
+        centerx, centery = consts.ROOM_WIDTH // 2, consts.ROOM_HEIGHT // 2
+
+        if self.room_type == consts.RoomsTypes.SPAWN:
+            return
+
+        if self.room_type == consts.RoomsTypes.BOSS and self.floor_type == consts.FloorsTypes.BASEMENT:
+            Fistula((6, 3), 40, self.paths, self.main_hero,
+                    (self.movement_borders, self.doors), self.hp_bar_group, 1, 2,
+                    self.bosses, self.blowable)
+        
+        if self.room_type == consts.RoomsTypes.BOSS and self.floor_type == consts.FloorsTypes.CAVES:
+            Envy((6, 3), 40, self.paths, self.main_hero,
+                 (self.movement_borders, self.doors), self.hp_bar_group, 1, 2,
+                 self.bosses, self.blowable)
+            
+        if self.room_type == consts.RoomsTypes.BOSS and self.floor_type == consts.FloorsTypes.CATACOMBS:
+            Teratoma((6, 3), 40, self.paths, self.main_hero,
+                     (self.movement_borders, self.doors), self.hp_bar_group, 1, 2,
+                     self.bosses, self.blowable)
+
+        if self.room_type == consts.RoomsTypes.BOSS and self.floor_type == consts.FloorsTypes.DEPTHS:
+            Duke((6, 3), self.paths, self.main_hero,
+                 (self.movement_borders, self.doors, self.main_hero_group),
+                 (self.main_hero_group, self.colliadble_group), self.hp_bar_group,
+                 1.4, self.bosses, self.blowable)
+
+        if self.room_type == consts.RoomsTypes.BOSS and self.floor_type == consts.FloorsTypes.BLUEWOMB:
+            Fistula((6, 3), 40, self.paths, self.main_hero,
+                    (self.movement_borders, self.doors), self.hp_bar_group, 1, 2,
+                    self.bosses, self.blowable)
+
+        if self.room_type == consts.RoomsTypes.BOSS and self.floor_type == consts.FloorsTypes.WOMB:
+            Pudge((6, 3), 40, self.paths, self.main_hero,
+                  (self.movement_borders, self.doors), self.hp_bar_group, 1, 2,
+                  self.bosses, self.blowable)
+
+        if self.room_type == consts.RoomsTypes.BOSS:
+            self.is_friendly = False
+            Trapdoor(self.colliadble_group, self.doors)
+            return
+
+        if self.room_type == consts.RoomsTypes.TREASURE:
+            pedestal = Pedestal((centerx, centery),
+                                self.obstacles, self.colliadble_group, self.other)
+            pedestal.set_artifact(random.choice(Room.artifacts), self.artifacts_group)
+            return
+
+        if self.room_type == consts.RoomsTypes.SHOP:
+            for i, items in zip(range(-2, 2 + 1, 2), (Room.artifacts, Room.loot, Room.loot)):
+                ShopItem((centerx + i, centery), random.choice(items), self.other)
+            return
+
+        if self.room_type == consts.RoomsTypes.SECRET:
+            for i in range(-2, 2 + 1, 2):
+                self.set_pickable((centerx + i, centery))
+            return
+        
+    def setup_entities_ac(self):
+        if(self.room_type != consts.RoomsTypes.DEFAULT):
+            self.generar_habitaciones_especiales()
+        else:
+            room = cellular_automatan()
+            centerx, centery = consts.ROOM_WIDTH // 2, consts.ROOM_HEIGHT // 2
+            for y in range(consts.ROOM_HEIGHT):
+                for x in range(consts.ROOM_WIDTH):
+                    if y == centery or x == centerx:
+                        continue
+                    if room[y][x] == 1:
+                        Rock((x, y), self.floor_type, self.room_type, self.colliadble_group, self.rocks,
+                             self.obstacles, self.blowable)
+                    elif room[y][x] == 2:
+                        Poop((x, y), self.colliadble_group, self.poops, self.obstacles, self.blowable)
+                    elif room[y][x] == 3:
+                        Web((x, y), self.colliadble_group, self.webs, self.blowable)
+                    elif room[y][x] == 4:
+                        fire_type = random.choices([consts.FirePlacesTypes.DEFAULT, consts.FirePlacesTypes.RED],
+                                                   [0.9, 0.1])[0]
+                        FirePlace((x, y), self.colliadble_group, self.fires, self.blowable, self.obstacles,
+                                  fire_type=fire_type,
+                                  tear_collide_groups=(self.colliadble_group, self.tears_borders, self.main_hero_group),
+                                  main_hero=self.main_hero)
+                    elif room[y][x] == 5:
+                        self.set_pickable((x, y))
+                    elif room[y][x] == 6:
+                        Maw((x, y), self.main_hero, (self.movement_borders, self.doors),
+                            (self.colliadble_group, self.tears_borders, self.main_hero_group),
+                            self.enemies, self.blowable)
+                    elif room[y][x] == 7:
+                        if(self.floor_type in [consts.FloorsTypes.DEPTHS, consts.FloorsTypes.BLUEWOMB, consts.FloorsTypes.WOMB]):
+                            Host((x, y), self.main_hero, (self.colliadble_group, self.movement_borders, self.doors),
+                                (self.colliadble_group, self.tears_borders, self.main_hero_group),
+                                self.enemies, self.blowable)
+                        else:
+                            Fly((x, y), self.paths, self.main_hero, (self.movement_borders, self.doors),
+                            (self.colliadble_group, self.tears_borders, self.main_hero_group),
+                            self.enemies, self.blowable)
+                            
+                    elif room[y][x] == 8:
+                        Guts((x, y), self.paths, (self.colliadble_group, self.movement_borders, self.other),
+                            self.enemies, self.blowable)
+                    elif room[y][x] == 9:
+                        Spikes((x, y), self.colliadble_group, self.obstacles, self.spikes, hiding_delay=1, hiding_time=1)
+                    
+
+        self.is_friendly = not(bool(self.enemies) + bool(self.bosses))
+
