@@ -37,7 +37,10 @@ class Level:
         """
         Generación de cuartos de nivel y colocación de puertas.
         """
-        self.level_map = generate_level(self.width, self.height, 15)
+        rangeRooms = self.get_number_of_rooms(self.floor_type)
+        print(rangeRooms)
+        print(self.floor_type)
+        self.level_map = generate_level(self.width, self.height, rangeRooms)
         for y, row in enumerate(self.level_map):
             for x, room_type in enumerate(row):
                 if room_type == consts.RoomsTypes.EMPTY:
@@ -164,30 +167,37 @@ class Level:
                 if room:
                     room.update_detection_state(is_spotted=True)
 
-    def get_number_of_rooms(self, nivel: consts.FloorsTypes) -> int:
+    def get_number_of_rooms(self, nivel: consts.FloorsTypes) -> tuple[int, int]:
         """
-         Selección del número de habitaciones que tendrá el piso por nivel.
+         Selección el rango del número de habitaciones que tendrá el piso por nivel.
 
          :param nivel: Nivel de piso.
-         :return: Número de habitaciones.
+         :return: Rango del número de habitaciones.
         """
 
-        nRooms = 10
+        minRooms = 10
+        maxRooms = 15
 
         if nivel == consts.FloorsTypes.BASEMENT:
-            nRooms += 2
+            minRooms += 2
+            maxRooms += 2
         elif nivel == consts.FloorsTypes.CAVES:
-            nRooms += 3
+            minRooms += 4
+            maxRooms += 4
         elif nivel == consts.FloorsTypes.CATACOMBS:
-            nRooms += 4
+            minRooms += 6
+            maxRooms += 6
         elif nivel == consts.FloorsTypes.DEPTHS:
-            nRooms += 5
+            minRooms += 8
+            maxRooms += 8
         elif nivel == consts.FloorsTypes.BLUEWOMB:
-            nRooms += 6
+            minRooms += 10
+            maxRooms += 10
         elif nivel == consts.FloorsTypes.WOMB:
-            nRooms += 7
+            minRooms += 12
+            maxRooms += 12
         
-        return nRooms
+        return minRooms, maxRooms
     
     # constructor pasando mapa de nivel
     def constructor(self, floor_type: consts.FloorsTypes | str, main_hero: Player, level_map: list[list[consts.RoomsTypes | str]], width: int = 10, height: int = 6):

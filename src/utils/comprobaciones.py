@@ -55,43 +55,12 @@ def exists_special_room(rooms: list[list[RoomsTypes]], especial: RoomsTypes) -> 
     """
     return any(room == especial for row in rooms for room in row)
 
-def fix_special_rooms(child: list[list[RoomsTypes]]):
-    """
-    Verifica si las salas especiales (tesoro, sala de inicio, sala del jefe, tienda) están duplicadas en el hijo.
-    Si alguna sala especial está duplicada, se cambia a DEFAULT.
 
-    :param child: La matriz del hijo generado por crossover.
-    :return: None
+def count_rooms(rooms: list[list[RoomsTypes]]) -> int:
     """
-    # Inicializar banderas para verificar la duplicación de salas especiales
-    treasure_duplicated = False
-    spawn_duplicated = False
-    boss_duplicated = False
-    shop_duplicated = False
+    Contar el número de habitaciones en la matriz de habitaciones.
 
-    for y in range(len(child)):
-        for x in range(len(child[0])):
-            # Si alguna sala esta duplicada se cambiará a DEFAULT
-            if child[y][x] == RoomsTypes.TREASURE:
-                if treasure_duplicated:
-                    child[y][x] = RoomsTypes.DEFAULT
-                else:
-                    treasure_duplicated = True
-            elif child[y][x] == RoomsTypes.SPAWN:
-                if spawn_duplicated:
-                    
-                    child[y][x] = RoomsTypes.DEFAULT
-                else:
-                    spawn_duplicated = True
-            elif child[y][x] == RoomsTypes.BOSS:
-                if boss_duplicated:
-                    child[y][x] = RoomsTypes.DEFAULT
-                else:
-                    boss_duplicated = True
-            elif child[y][x] == RoomsTypes.SHOP:
-                if shop_duplicated:
-                    child[y][x] = RoomsTypes.DEFAULT
-                else:
-                    shop_duplicated = True
-    
-    return child
+    :param rooms: una matriz bidimensional de valores de RoomsTypes.
+    :return: el número de habitaciones que hay en el mapa.
+    """
+    return sum(room != RoomsTypes.EMPTY for row in rooms for room in row)

@@ -160,7 +160,7 @@ def set_default_rooms(rooms: list[list[RoomsTypes | str]], room_numbers: int) ->
             rooms[cur_y][cur_x] = RoomsTypes.DEFAULT
 
 
-def generate_level(map_width: int, map_height: int, room_numbers: int) -> list[list[RoomsTypes | str]]:
+def generate_level(map_width: int, map_height: int, room_numbers: tuple[int,int]) -> list[list[RoomsTypes | str]]:
     """
      Generador de piso (nivel).
 
@@ -168,10 +168,13 @@ def generate_level(map_width: int, map_height: int, room_numbers: int) -> list[l
      :param map_height: altura del piso.
      :param room_numbers: - número de habitaciones teniendo en cuenta la generación, la tienda, el jefe, etc.
      """
+    minRooms = room_numbers[0]
+    maxRooms = room_numbers[1]
+
     assert 3 <= map_width <= 10                        # Comprobando el tamaño de la tarjeta
     assert 3 <= map_height <= 10                       # Comprobando el tamaño de la tarjeta
-    assert room_numbers >= 5                           # Generación, tienda, tesorería, jefe, habitación secreta.
-    assert room_numbers < map_width * map_height - 3   # Es posible generar todas las habitaciones.
+    assert minRooms >= 5                               # Generación, tienda, tesorería, jefe, habitación secreta.
+    assert maxRooms < map_width * map_height - 3   # Es posible generar todas las habitaciones.
 
     rooms = []
     successful_generation = False

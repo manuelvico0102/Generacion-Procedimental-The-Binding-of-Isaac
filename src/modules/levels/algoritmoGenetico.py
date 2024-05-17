@@ -183,7 +183,7 @@ def generate_initial_population(population_size: int, map_width: int, map_height
         population.append(rooms)
     return population
 
-def fitness(rooms: list[list[RoomsTypes]]) -> float:
+def fitness(rooms: list[list[RoomsTypes]], nRooms: tuple[int,int]) -> float:
     # Comprobar conectividad
     # ¿Distancia entre la sala de inicio y la sala del jefe? + cantidad de bifurcaciones
     # ¿Número de habitaciones secretas accesibles?
@@ -212,6 +212,12 @@ def fitness(rooms: list[list[RoomsTypes]]) -> float:
 
     if comprobaciones.distance_between_start_and_boss(rooms) > 10:
         puntuacion += 10
+    
+    if nRooms[0] <= comprobaciones.count_rooms(rooms) <= nRooms[1]:
+        puntuacion += 30
+    
+    if comprobaciones.count_rooms(rooms) < nRooms[0]:
+        puntuacion -= 30
 
     
     return puntuacion
@@ -255,18 +261,18 @@ def mutate(rooms: list[list[RoomsTypes]], mutation_rate: float) -> list[list[Roo
     
     return mutated_rooms
 
-def genetic_algorithm(population_size: int, map_width: int, map_height: int, room_numbers: int, generations: int) -> list[list[RoomsTypes]]:
-    population = generate_initial_population(population_size, map_width, map_height, room_numbers)
+def genetic_algorithm(population_size: int, map_width: int, map_height: int, room_numbers: tuple[int,int], generations: int) -> list[list[RoomsTypes]]:
+    population = generate_initial_population(population_size, map_width, map_height, room_numbers[0])
     for _ in range(generations):
         # Se selecciona los dos mejores individuos
-        fitness_scores = [(individual, fitness(individual)) for individual in population]
+        fitness_scores = [(individual, fitness(individual, room_numbers)) for individual in population]
         parents = [individual for individual, _ in sorted(fitness_scores, key=lambda x: x[1], reverse=True)[:2]]
 
         # Se crean hijos a partir de los padres
         children = [mutate(crossover(parents[0], parents[1]), mutation_rate=0.1) for _ in range(population_size - 2)]
         population = parents + children
 
-    return max(population, key=fitness)
+    return max(population, key=lambda individual: fitness(individual, room_numbers))
 
 def print_rooms(rooms):
     for row in rooms:
@@ -276,7 +282,7 @@ def main():
     # Ejemplo de uso
     map_width = 10
     map_height = 10
-    room_numbers = 20
+    room_numbers = (20,30)
     population_size = 10
     generations = 100
 
