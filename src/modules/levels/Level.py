@@ -1,4 +1,5 @@
 import pygame as pg
+import json
 
 from src import consts
 from src.utils.graph import valid_coords, get_neighbors_coords
@@ -6,6 +7,7 @@ from src.modules.levels.Room import Room
 from src.modules.levels.LevelGenerator import generate_level
 from src.modules.animations.MovingRoomAnimation import MovingRoomAnimation
 from src.modules.characters.parents import Player
+from src.consts import RoomsTypes
 
 
 class Level:
@@ -210,7 +212,6 @@ class Level:
 
         self.load_level_map(level_map)
 
-    # cargar mapa level_map
     def load_level_map(self, level_map: list[list[consts.RoomsTypes | str]]):
         self.level_map = level_map
         for y, row in enumerate(self.level_map):
@@ -225,3 +226,49 @@ class Level:
                 self.rooms[y][x] = room
         assert self.current_room is not None and self.current_room.room_type == consts.RoomsTypes.SPAWN
         self.change_rooms_state(self.current_room.x, self.current_room.y)
+
+
+    def download_level_map_to_file(self, filename: str):
+        # Diccionario de mapeo
+        room_type_map = {
+            None: "__",
+            RoomsTypes.DEFAULT: "DE",
+            RoomsTypes.SECRET: "SE",
+            RoomsTypes.SHOP: "SH",
+            RoomsTypes.BOSS: "BO",
+            RoomsTypes.TREASURE: "TR",
+            RoomsTypes.SPAWN: "SP"
+        }
+
+        with open(filename, 'w') as file:
+            for row in self.rooms:
+                row_str = [room_type_map.get(room.room_type if room else None) for room in row]
+                file.write(','.join(row_str) + '\n')
+                
+
+    def load_level_map_from_file(self, filename: str):
+
+        symbol_to_room_type = {
+            "__": RoomsTypes.EMPTY,
+            "DE": RoomsTypes.DEFAULT,
+            "SE": RoomsTypes.SECRET,
+            "SH": RoomsTypes.SHOP,
+            "BO": RoomsTypes.BOSS,
+            "TR": RoomsTypes.TREASURE,
+            "SP": RoomsTypes.SPAWN
+        }
+
+        with open(filename, 'r') as file:
+            level_map = []
+            for line in file:
+                row = line.strip().split(',')
+                level_map_row = [
+                    symbol_to_room_type[symbol] if symbol in symbol_to_room_type else RoomsTypes.EMPTY
+                    for symbol in row
+                ]
+                level_map.append(level_map_row)
+
+        self.constructor(self.floor_type, self.main_hero, level_map, self.width, self.height)
+        
+        
+        

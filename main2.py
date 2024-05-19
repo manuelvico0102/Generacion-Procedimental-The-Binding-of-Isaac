@@ -45,6 +45,14 @@ def main():
                     for level in levels:
                         level.change_all_rooms_state()
                     minimaps = [Minimap(level) for level in levels]
+                if event.key == pg.K_d:
+                    for level in levels:
+                        level.download_level_map_to_file("mapa" + str(levels.index(level)) + ".txt")
+                if event.key == pg.K_c:
+                    for level in levels:
+                        level.load_level_map_from_file("mapa" + str(levels.index(level)) + ".txt")
+                        level.change_all_rooms_state()
+                    minimaps = [Minimap(level) for level in levels]
 
         screen.fill((0,0,0))
 
@@ -59,58 +67,6 @@ def main():
 
     pg.quit()
 
-
-def main2(mapas):
-    name_hero = "isaac"
-    main_hero = Player(name_hero)
-
-    levels = [Level(consts.FloorsTypes.BASEMENT, main_hero, level_map=mapa) for mapa in mapas]
-
-    for level in levels:
-        level.change_all_rooms_state()
-
-    minimaps = [Minimap(level) for level in levels]
-
-    num_cols = 3
-    num_rows = 2
-    minimap_width = consts.WIDTH // num_cols
-    minimap_height = consts.HEIGHT // num_rows
-
-    offset_x = 20
-    offset_y = 100
-
-    running = True
-    while running:
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                running = False
-
-        screen.fill((0, 0, 0))
-
-        for i, minimap in enumerate(minimaps):
-            row = i // num_cols
-            col = i % num_cols
-            minimap_x = col * minimap_width + offset_x
-            minimap_y = row * minimap_height + offset_y
-            minimap.render(screen, minimap_x, minimap_y)
-
-        pg.display.flip()
-
-    pg.quit()
-
 if __name__ == '__main__':
     main()
-    #parent1, parent2, child = ag.main2()
-    """parent1, parent2 = ag.generate_initial_population(2, 10, 6, 15)
-    child = ag.crossover(parent1, parent2)
-
-    print(parent1)
-    print()
-    print(parent2)
-    print()
-    #print(child)
-    print()
-    mapas = [parent1, parent2, child]
-    main2(mapas)"""
-    #ag.generate_initial_population(10, 10, 10, 20)
     
