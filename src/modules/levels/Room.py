@@ -395,7 +395,7 @@ class Room(RoomTextures):
         for door in self.doors.sprites():
             getattr(door, state)(with_sound=with_sound)
 
-    def update_detection_state(self, is_spotted: bool = False, is_active: bool = False):
+    def update_detection_state(self, is_spotted: bool = False, is_active: bool = False, see_secret: bool = False):
         """
         Actualiza el estado de visibilidad en el minimapa.
 
@@ -408,6 +408,9 @@ class Room(RoomTextures):
             self.is_visited = True
         if (self.is_visited or is_spotted) and self.room_type != consts.RoomsTypes.SECRET:
             self.is_spotted = True
+        if see_secret:
+            self.is_spotted = True
+            
         self.update_minimap()
 
     def update_minimap(self):

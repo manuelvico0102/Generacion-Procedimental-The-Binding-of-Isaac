@@ -38,8 +38,6 @@ class Level:
         Generación de cuartos de nivel y colocación de puertas.
         """
         rangeRooms = self.get_number_of_rooms(self.floor_type)
-        print(rangeRooms)
-        print(self.floor_type)
         self.level_map = generate_level(self.width, self.height, rangeRooms)
         for y, row in enumerate(self.level_map):
             for x, room_type in enumerate(row):
@@ -165,7 +163,7 @@ class Level:
         for row in self.rooms:
             for room in row:
                 if room:
-                    room.update_detection_state(is_spotted=True)
+                    room.update_detection_state(is_spotted=True, see_secret=True)
 
     def get_number_of_rooms(self, nivel: consts.FloorsTypes) -> tuple[int, int]:
         """
