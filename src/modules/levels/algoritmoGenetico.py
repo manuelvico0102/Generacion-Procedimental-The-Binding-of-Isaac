@@ -210,8 +210,8 @@ def fitness(rooms: list[list[RoomsTypes]], nRooms: tuple[int,int]) -> float:
         if comprobaciones.get_number_of_roomtype(rooms, RoomsTypes.SECRET) > 1:
             puntuacion += 10
 
-    if comprobaciones.distance_between_start_and_boss(rooms) > 10:
-        puntuacion += 10
+    if comprobaciones.exists_special_room(rooms, RoomsTypes.SPAWN):
+        puntuacion += 20
     
     if nRooms[0] <= comprobaciones.count_rooms(rooms) <= nRooms[1]:
         puntuacion += 30
@@ -219,6 +219,8 @@ def fitness(rooms: list[list[RoomsTypes]], nRooms: tuple[int,int]) -> float:
     if comprobaciones.count_rooms(rooms) < nRooms[0]:
         puntuacion -= 30
 
+    if comprobaciones.distance_between_start_and_boss(rooms) > 10:
+        puntuacion += 30
     
     return puntuacion
 
@@ -245,19 +247,18 @@ def crossover(parent1: list[list[RoomsTypes]], parent2: list[list[RoomsTypes]]) 
 
     return child
 
-def mutate(rooms: list[list[RoomsTypes]], mutation_rate: float) -> list[list[RoomsTypes]]:
-    # Intercambio de habitaciones
-    # Tal vez sea mejor especificar que no sea una habitación empty
-
+def mutate(rooms: list[list[RoomsTypes]], mutation_prob: float, mutation_rate: float) -> list[list[RoomsTypes]]:
     mutated_rooms = [row[:] for row in rooms]   # Copiar la matriz de habitaciones
 
-    for i in range(len(rooms)):
-        for j in range(len(rooms[i])):
-            if random.random() < mutation_rate:
-                # Seleccionar dos ubicaciones aleatorias distintas
-                new_i, new_j = random.randint(0, len(rooms) - 1), random.randint(0, len(rooms[i]) - 1)
-                # Intercambiar las salas en las dos ubicaciones seleccionadas
-                mutated_rooms[i][j], mutated_rooms[new_i][new_j] = mutated_rooms[new_i][new_j], mutated_rooms[i][j]
+    # individuos a mutar
+    num_mutations = int(comprobaciones.count_rooms(rooms) * mutation_rate)
+
+    for _ in range(num_mutations):
+        y = random.randint(0, len(rooms) - 1)
+        x = random.randint(0, len(rooms[0]) - 1)
+        if random.random() < mutation_prob:
+            # Se cambia el tipo de habitación / o añade sala si antes era empty
+            mutated_rooms[y][x] = random.choice([RoomsTypes.DEFAULT, RoomsTypes.TREASURE, RoomsTypes.SHOP])
     
     return mutated_rooms
 
@@ -269,7 +270,7 @@ def genetic_algorithm(population_size: int, map_width: int, map_height: int, roo
         parents = [individual for individual, _ in sorted(fitness_scores, key=lambda x: x[1], reverse=True)[:2]]
 
         # Se crean hijos a partir de los padres
-        children = [mutate(crossover(parents[0], parents[1]), mutation_rate=0.1) for _ in range(population_size - 2)]
+        children = [mutate(crossover(parents[0], parents[1]), mutation_prob=0.1, mutation_rate=0.15) for _ in range(population_size - 2)]
         population = parents + children
 
     return max(population, key=lambda individual: fitness(individual, room_numbers))
