@@ -1,5 +1,5 @@
 import pygame as pg
-import json
+import os
 
 from src import consts
 from src.utils.graph import valid_coords, get_neighbors_coords
@@ -229,6 +229,10 @@ class Level:
 
 
     def download_level_map_to_file(self, filename: str):
+        directory = "mapas"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
         # Diccionario de mapeo
         room_type_map = {
             None: "__",
@@ -240,7 +244,9 @@ class Level:
             RoomsTypes.SPAWN: "SP"
         }
 
-        with open(filename, 'w') as file:
+        file_path = os.path.join(directory, filename)
+
+        with open(file_path, 'w') as file:
             for row in self.rooms:
                 row_str = [room_type_map.get(room.room_type if room else None) for room in row]
                 file.write(','.join(row_str) + '\n')
@@ -258,6 +264,9 @@ class Level:
             "SP": RoomsTypes.SPAWN
         }
 
+        aniadir = "mapas/"
+        filename = aniadir + filename
+        
         with open(filename, 'r') as file:
             level_map = []
             for line in file:
