@@ -258,20 +258,44 @@ def mutate(rooms: list[list[RoomsTypes]], mutation_prob: float, mutation_rate: f
         x = random.randint(0, len(rooms[0]) - 1)
         if random.random() < mutation_prob:
             # Se cambia el tipo de habitación / o añade sala si antes era empty
-            mutated_rooms[y][x] = random.choice([RoomsTypes.DEFAULT, RoomsTypes.TREASURE, RoomsTypes.SHOP])
+            if rooms[y][x] != RoomsTypes.SPAWN:             # No se puede cambiar la sala de inicio si no da error
+                mutated_rooms[y][x] = random.choice([RoomsTypes.DEFAULT, RoomsTypes.TREASURE, RoomsTypes.SHOP])
     
     return mutated_rooms
 
-def genetic_algorithm(population_size: int, map_width: int, map_height: int, room_numbers: tuple[int,int], generations: int) -> list[list[RoomsTypes]]:
+def steady_state_genetic_algorithm(population_size: int, map_width: int, map_height: int, room_numbers: tuple[int,int], generations: int) -> list[list[RoomsTypes]]:
     population = generate_initial_population(population_size, map_width, map_height, room_numbers[0])
     for _ in range(generations):
-        # Se selecciona los dos mejores individuos
         fitness_scores = [(individual, fitness(individual, room_numbers)) for individual in population]
-        parents = [individual for individual, _ in sorted(fitness_scores, key=lambda x: x[1], reverse=True)[:2]]
+        new_population = []
 
-        # Se crean hijos a partir de los padres
-        children = [mutate(crossover(parents[0], parents[1]), mutation_prob=0.1, mutation_rate=0.15) for _ in range(population_size - 2)]
-        population = parents + children
+        for _ in range(population_size):
+            parent1, parent2 = select_parents_baker(population, fitness_scores)
+            child = mutate(crossover(parent1, parent2), mutation_prob=0.05, mutation_rate=0.15)
+            new_population.append(child)
+
+        combined_population = population + new_population
+        fitness_scores = [(individual, fitness(individual, room_numbers)) for individual in combined_population]
+        population = sorted(combined_population, key=lambda individual: fitness(individual, room_numbers), reverse=True)[:population_size]
+
+    return max(population, key=lambda individual: fitness(individual, room_numbers))
+
+def select_parents_baker(population, fitness_scores):
+    total_fitness = sum(score for _, score in fitness_scores)
+    normalized_weights = [score / total_fitness for _, score in fitness_scores]
+    parents = random.choices(population, weights=normalized_weights, k=2)
+    return parents
+
+def generational_genetic_algorithm(population_size: int, map_width: int, map_height: int, room_numbers: tuple[int,int], generations: int) -> list[list[RoomsTypes]]:
+    population = generate_initial_population(population_size, map_width, map_height, room_numbers[0])
+    for _ in range(generations):
+        fitness_scores = [(individual, fitness(individual, room_numbers)) for individual in population]
+        new_population = []
+        for _ in range(population_size):
+            parent1, parent2 = select_parents_baker(population, fitness_scores)
+            child = mutate(crossover(parent1, parent2), mutation_prob=0.05, mutation_rate=0.15)
+            new_population.append(child)
+        population = new_population
 
     return max(population, key=lambda individual: fitness(individual, room_numbers))
 
@@ -287,7 +311,7 @@ def main():
     population_size = 10
     generations = 100
 
-    best_map = genetic_algorithm(population_size, map_width, map_height, room_numbers, generations)
+    best_map = steady_state_genetic_algorithm(population_size, map_width, map_height, room_numbers, generations)
     for row in best_map:
         print(row)
 
