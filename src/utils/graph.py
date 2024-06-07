@@ -37,6 +37,8 @@ def get_neighbors_coords(x: int, y: int, rooms: list[list[consts.RoomsTypes | st
     ignored = [consts.RoomsTypes.EMPTY]
     if ignore_secret:
         ignored.append(consts.RoomsTypes.SECRET)
+        ignored.append(consts.RoomsTypes.TREASURE)
+        ignored.append(consts.RoomsTypes.SHOP)
     return [(x + i, y + j) for i, j in moves if
             valid_coords(x + i, y + j, map_width, map_height) and rooms[y + j][x + i] not in ignored]
 

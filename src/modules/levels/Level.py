@@ -1,4 +1,5 @@
 import pygame as pg
+import os
 
 from src import consts
 from src.utils.graph import valid_coords, get_neighbors_coords
@@ -6,6 +7,7 @@ from src.modules.levels.Room import Room
 from src.modules.levels.LevelGenerator import generate_level
 from src.modules.animations.MovingRoomAnimation import MovingRoomAnimation
 from src.modules.characters.parents import Player
+from src.consts import RoomsTypes
 
 
 class Level:
@@ -37,7 +39,8 @@ class Level:
         """
         Generación de cuartos de nivel y colocación de puertas.
         """
-        self.level_map = generate_level(self.width, self.height, 15)
+        rangeRooms = self.get_number_of_rooms(self.floor_type)
+        self.level_map = generate_level(self.width, self.height, rangeRooms)
         for y, row in enumerate(self.level_map):
             for x, room_type in enumerate(row):
                 if room_type == consts.RoomsTypes.EMPTY:
@@ -162,32 +165,39 @@ class Level:
         for row in self.rooms:
             for room in row:
                 if room:
-                    room.update_detection_state(is_spotted=True)
+                    room.update_detection_state(is_spotted=True, see_secret=True)
 
-    def get_number_of_rooms(self, nivel: consts.FloorsTypes) -> int:
+    def get_number_of_rooms(self, nivel: consts.FloorsTypes) -> tuple[int, int]:
         """
-         Selección del número de habitaciones que tendrá el piso por nivel.
+         Selección el rango del número de habitaciones que tendrá el piso por nivel.
 
          :param nivel: Nivel de piso.
-         :return: Número de habitaciones.
+         :return: Rango del número de habitaciones.
         """
 
-        nRooms = 10
+        minRooms = 10
+        maxRooms = 15
 
         if nivel == consts.FloorsTypes.BASEMENT:
-            nRooms += 2
+            minRooms += 2
+            maxRooms += 2
         elif nivel == consts.FloorsTypes.CAVES:
-            nRooms += 3
+            minRooms += 4
+            maxRooms += 4
         elif nivel == consts.FloorsTypes.CATACOMBS:
-            nRooms += 4
+            minRooms += 6
+            maxRooms += 6
         elif nivel == consts.FloorsTypes.DEPTHS:
-            nRooms += 5
+            minRooms += 8
+            maxRooms += 8
         elif nivel == consts.FloorsTypes.BLUEWOMB:
-            nRooms += 6
+            minRooms += 10
+            maxRooms += 10
         elif nivel == consts.FloorsTypes.WOMB:
-            nRooms += 7
+            minRooms += 12
+            maxRooms += 12
         
-        return nRooms
+        return minRooms, maxRooms
     
     # constructor pasando mapa de nivel
     def constructor(self, floor_type: consts.FloorsTypes | str, main_hero: Player, level_map: list[list[consts.RoomsTypes | str]], width: int = 10, height: int = 6):
@@ -202,7 +212,6 @@ class Level:
 
         self.load_level_map(level_map)
 
-    # cargar mapa level_map
     def load_level_map(self, level_map: list[list[consts.RoomsTypes | str]]):
         self.level_map = level_map
         for y, row in enumerate(self.level_map):
@@ -217,3 +226,58 @@ class Level:
                 self.rooms[y][x] = room
         assert self.current_room is not None and self.current_room.room_type == consts.RoomsTypes.SPAWN
         self.change_rooms_state(self.current_room.x, self.current_room.y)
+
+
+    def download_level_map_to_file(self, filename: str):
+        directory = "mapas"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        # Diccionario de mapeo
+        room_type_map = {
+            None: "__",
+            RoomsTypes.DEFAULT: "DE",
+            RoomsTypes.SECRET: "SE",
+            RoomsTypes.SHOP: "SH",
+            RoomsTypes.BOSS: "BO",
+            RoomsTypes.TREASURE: "TR",
+            RoomsTypes.SPAWN: "SP"
+        }
+
+        file_path = os.path.join(directory, filename)
+
+        with open(file_path, 'w') as file:
+            for row in self.rooms:
+                row_str = [room_type_map.get(room.room_type if room else None) for room in row]
+                file.write(','.join(row_str) + '\n')
+                
+
+    def load_level_map_from_file(self, filename: str):
+
+        symbol_to_room_type = {
+            "__": RoomsTypes.EMPTY,
+            "DE": RoomsTypes.DEFAULT,
+            "SE": RoomsTypes.SECRET,
+            "SH": RoomsTypes.SHOP,
+            "BO": RoomsTypes.BOSS,
+            "TR": RoomsTypes.TREASURE,
+            "SP": RoomsTypes.SPAWN
+        }
+
+        aniadir = "mapas/"
+        filename = aniadir + filename
+        
+        with open(filename, 'r') as file:
+            level_map = []
+            for line in file:
+                row = line.strip().split(',')
+                level_map_row = [
+                    symbol_to_room_type[symbol] if symbol in symbol_to_room_type else RoomsTypes.EMPTY
+                    for symbol in row
+                ]
+                level_map.append(level_map_row)
+
+        self.constructor(self.floor_type, self.main_hero, level_map, self.width, self.height)
+        
+        
+        
