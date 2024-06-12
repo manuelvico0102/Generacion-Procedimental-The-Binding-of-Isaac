@@ -16,8 +16,14 @@ import src.modules.levels.algoritmoGenetico as ag
 def main():
     name_hero = "isaac"
     main_hero = Player(name_hero)
+    algorithm = 0                   # 0 para algoritmo genético de estado estable, 1 para algoritmo genético generacional
+    
+    if algorithm == 0:
+        print("Algoritmo genético de estado estacionario")
+    else:
+        print("Algoritmo genético generacional")
 
-    levels = [Level(floor_type, main_hero) for floor_type in consts.FloorsTypes]
+    levels = [Level(floor_type, main_hero, algorithm=algorithm) for floor_type in consts.FloorsTypes]
     for level in levels:
         level.change_all_rooms_state()
 
@@ -41,7 +47,7 @@ def main():
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_r:  # Verificar si se presiona la tecla "r"
                     # Regenerar los niveles
-                    levels = [Level(floor_type, main_hero) for floor_type in consts.FloorsTypes]
+                    levels = [Level(floor_type, main_hero, algorithm=algorithm) for floor_type in consts.FloorsTypes]
                     for level in levels:
                         level.change_all_rooms_state()
                     minimaps = [Minimap(level) for level in levels]
