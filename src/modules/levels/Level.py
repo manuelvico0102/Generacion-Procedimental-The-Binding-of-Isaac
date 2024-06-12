@@ -163,6 +163,10 @@ class Level:
             self.current_room.render(screen)
 
     def change_all_rooms_state(self):
+        """
+            Cambiar el estado de visibilidad de todas las habitaciones a visibles.
+        """
+
         for row in self.rooms:
             for room in row:
                 if room:
@@ -200,8 +204,17 @@ class Level:
         
         return minRooms, maxRooms
     
-    # constructor pasando mapa de nivel
     def constructor(self, floor_type: consts.FloorsTypes | str, main_hero: Player, level_map: list[list[consts.RoomsTypes | str]], width: int = 10, height: int = 6):
+        """
+            Constructor de la clase de nivel pasando mapa del nivel.
+
+            :param floor_type: Tipo de piso.
+            :param main_hero: Personaje principal.
+            :param level_map: Mapa de nivel.
+            :param width: ancho máximo de la disposición de la habitación.
+            :param height: altura máxima de la disposición de la habitación.
+        """
+        
         self.floor_type = floor_type
         self.main_hero = main_hero
         self.width = width
@@ -214,6 +227,12 @@ class Level:
         self.load_level_map(level_map)
 
     def load_level_map(self, level_map: list[list[consts.RoomsTypes | str]]):
+        """
+            Cargar mapa de nivel.
+
+            :param level_map: Mapa de nivel.
+        """
+
         self.level_map = level_map
         for y, row in enumerate(self.level_map):
             for x, room_type in enumerate(row):
@@ -230,6 +249,12 @@ class Level:
 
 
     def download_level_map_to_file(self, filename: str):
+        """
+            Descargar mapa de nivel en un archivo. Se guarda en la carpeta "mapas".
+
+            :param filename: Nombre del archivo.
+        """
+
         directory = "mapas"
         if not os.path.exists(directory):
             os.makedirs(directory)
@@ -254,7 +279,11 @@ class Level:
                 
 
     def load_level_map_from_file(self, filename: str):
+        """
+            Cargar mapa de nivel desde un archivo. Se carga desde la carpeta "mapas".
 
+            :param filename: Nombre del archivo.
+        """
         symbol_to_room_type = {
             "__": RoomsTypes.EMPTY,
             "DE": RoomsTypes.DEFAULT,
