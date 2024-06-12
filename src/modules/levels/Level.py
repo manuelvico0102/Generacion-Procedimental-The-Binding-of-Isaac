@@ -23,7 +23,8 @@ class Level:
                  floor_type: consts.FloorsTypes | str,
                  main_hero: Player,
                  width: int = 10,
-                 height: int = 6):
+                 height: int = 6,
+                 algorithm: int = 0):
         self.floor_type = floor_type
         self.main_hero = main_hero
         self.width = width
@@ -33,14 +34,14 @@ class Level:
         self.current_room: Room | None = None
         self.is_moving: bool | MovingRoomAnimation = False
 
-        self.setup_level()
+        self.setup_level(algorithm=algorithm)
 
-    def setup_level(self):
+    def setup_level(self, algorithm: int = 0):
         """
         Generación de cuartos de nivel y colocación de puertas.
         """
         rangeRooms = self.get_number_of_rooms(self.floor_type)
-        self.level_map = generate_level(self.width, self.height, rangeRooms)
+        self.level_map = generate_level(self.width, self.height, rangeRooms, algorithm)
         for y, row in enumerate(self.level_map):
             for x, room_type in enumerate(row):
                 if room_type == consts.RoomsTypes.EMPTY:

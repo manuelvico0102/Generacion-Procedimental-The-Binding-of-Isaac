@@ -160,7 +160,7 @@ def set_default_rooms(rooms: list[list[RoomsTypes | str]], room_numbers: int) ->
             rooms[cur_y][cur_x] = RoomsTypes.DEFAULT
 
 
-def generate_level(map_width: int, map_height: int, room_numbers: tuple[int,int]) -> list[list[RoomsTypes | str]]:
+def generate_level(map_width: int, map_height: int, room_numbers: tuple[int,int], algorithm: int = 0) -> list[list[RoomsTypes | str]]:
     """
      Generador de piso (nivel).
 
@@ -177,15 +177,20 @@ def generate_level(map_width: int, map_height: int, room_numbers: tuple[int,int]
     assert maxRooms < map_width * map_height - 3   # Es posible generar todas las habitaciones.
 
     rooms = []
+    """
+    # Implementación inicial del algoritmo de generación de niveles
     successful_generation = False
     while not successful_generation:
         # Generación de niveles hasta que aparezca un diseño adecuado
-        #rooms = [[RoomsTypes.EMPTY] * map_width for _ in range(map_height)]
-        #set_default_rooms(rooms, room_numbers)
-        #generate_map(rooms, room_numbers)
+        rooms = [[RoomsTypes.EMPTY] * map_width for _ in range(map_height)]
+        set_default_rooms(rooms, room_numbers)
+        successful_generation = set_other_rooms(rooms)"""
+    
+    if algorithm == 0:
         rooms = steady_state_genetic_algorithm(10, map_width, map_height, room_numbers, 50)
-        #rooms = generational_genetic_algorithm(10, map_width, map_height, room_numbers, 50)
-        successful_generation = True#set_other_rooms(rooms)
+    else:
+        rooms = generational_genetic_algorithm(10, map_width, map_height, room_numbers, 50)
+        
     assert rooms
     return rooms
 
