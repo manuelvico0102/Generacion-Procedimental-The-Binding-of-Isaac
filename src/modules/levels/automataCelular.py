@@ -15,8 +15,10 @@ SPIKES = 9
 
 def cellular_automatan():
     """
-    Crea un mapa de celdas para la generación de entidades
-    inspirado en el juego de la vida de Conway.
+        Crea un mapa de celdas para la generación de entidades
+        inspirado en el juego de la vida de Conway.
+
+        :return: matriz de celdas (la habitación).
     """
     
     step = 5
@@ -77,7 +79,13 @@ def cellular_automatan():
 
 def count_neighbors(room, i, j):
     """
-    Cuenta el número de vecinos de cada tipo de entidad.
+        Cuenta el número de vecinos de cada tipo de entidad.
+
+        :param room: matriz de celdas.
+        :param i: coordenada y de la celda.
+        :param j: coordenada x de la celda.
+
+        :return: diccionario con el número de vecinos de cada tipo de entidad.
     """
     neighbors = {EMPTY: 0, ROCK: 0, POOP: 0, WEB: 0, FIRE: 0, UNIQUE_OBJECT: 0, ENEMY_1: 0, ENEMY_2: 0, ENEMY_3: 0, SPIKES: 0}
 
@@ -91,6 +99,16 @@ def count_neighbors(room, i, j):
 
 
 def count_neighbors_not_empty(room, i, j):
+    """
+        Cuenta el número de vecinos que no están vacíos.
+
+        :param room: matriz de celdas.
+        :param i: coordenada y de la celda.
+        :param j: coordenada x de la celda.
+
+        :return: número de vecinos que no están vacíos.
+    """
+
     neighbors = count_neighbors(room, i, j)
     return (neighbors[ROCK] + neighbors[POOP] + neighbors[WEB] + neighbors[FIRE]
              + neighbors[UNIQUE_OBJECT] + neighbors[ENEMY_1] + neighbors[ENEMY_2]
@@ -98,6 +116,14 @@ def count_neighbors_not_empty(room, i, j):
 
 
 def count_enemy(room):
+    """
+        Cuenta el número de enemigos en la habitación.
+
+        :param room: matriz de celdas.
+
+        :return: número de enemigos en la habitación.
+    """
+
     count = 0
     for i in range(consts.ROOM_HEIGHT):
         for j in range(consts.ROOM_WIDTH):
