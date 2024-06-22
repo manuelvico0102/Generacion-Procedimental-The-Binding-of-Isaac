@@ -1,4 +1,10 @@
-# The Binding of Isaac: Python
+# Proyecto TFG: Implementación de Métodos de Generación Procedimental de Contenidos Basados en Machine Learning para el Juego Binding of Isaac
+
+## Contexto del proyecto
+
+Este proyecto de Trabajo de Fin de Grado (TFG) se enfoca en la generación de niveles para el juego Binding of Isaac utilizando algoritmos genéticos y autómatas celulares. Aunque el clon del juego no es completamente original, mi contribución principal ha sido en la generación de niveles donde se centra mi Trabajo de Fin de Grado.
+
+## The Binding of Isaac: Python
 
 #### Copia del videojuego The Binding of Isaac ([2011](https://store.steampowered.com/app/113200/The_Binding_of_Isaac), [2014](https://store.steampowered.com/app/250900/The_Binding_of_Isaac_Rebirth/))
 
@@ -48,4 +54,4 @@ El proyecto original "The Binding of Isaac: Python" fue creado por un equipo de 
 
 Para la implementación, se utilizaron las bibliotecas **pygame** (para dibujar sprites y manejar colisiones) y **sqlite3** (para guardar los resultados de las ejecuciones).
 
-En este proyecto, se ha trabajado con la generación de niveles para mejorar el proyecto original.
+En este proyecto de fin de grado, se ha trabajado con la generación de niveles para mejorar el proyecto original, como se menciona al comienzo.
