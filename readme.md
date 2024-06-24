@@ -22,7 +22,7 @@ cd ./Generacion-Procedimental-The-Binding-of-Isaac
 
 3. Instale todas las bibliotecas enumeradas en el archivo `requiremenets.txt`:
 ```commandline
-pip install -r ./requirements
+pip install -r ./requirements.txt
 ```
 
 4. Iniciar el juego:
