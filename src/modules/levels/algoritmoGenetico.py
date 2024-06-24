@@ -177,6 +177,17 @@ def generate_level(map_width: int, map_height: int, room_numbers: int) -> list[l
 
 
 def generate_initial_population(population_size: int, map_width: int, map_height: int, room_numbers: int) -> list:
+    """
+    Generar una población inicial de individuos.
+
+    :param population_size: tamaño de la población.
+    :param map_width: ancho del piso.
+    :param map_height: altura del piso.
+    :param room_numbers: número de habitaciones.
+
+    :return: población inicial de individuos.
+    """
+    
     population = []
     for _ in range(population_size):
         rooms = generate_level(map_width, map_height, room_numbers)
@@ -184,10 +195,15 @@ def generate_initial_population(population_size: int, map_width: int, map_height
     return population
 
 def fitness(rooms: list[list[RoomsTypes]], nRooms: tuple[int,int]) -> float:
-    # Comprobar conectividad
-    # ¿Distancia entre la sala de inicio y la sala del jefe? + cantidad de bifurcaciones
-    # ¿Número de habitaciones secretas accesibles?
-    # En caso de que de malos resultados puedo cambiar la generacion inicial para que haya tiendas y habitaciones secretas desde un principio
+    """
+    Función de aptitud para el algoritmo genético.
+
+    :param rooms: matriz bidimensional de valores de RoomsTypes.
+    :param nRooms: rango de número de habitaciones.
+
+    :return: puntuación de aptitud.
+    """
+
     puntuacion = 0
 
     if all_rooms_have_path_to_start(rooms):
@@ -225,10 +241,14 @@ def fitness(rooms: list[list[RoomsTypes]], nRooms: tuple[int,int]) -> float:
     return puntuacion
 
 def crossover(parent1: list[list[RoomsTypes]], parent2: list[list[RoomsTypes]]) -> list[list[RoomsTypes]]:
-    # Cruce por punto de corte (crossover) Este método elige un punto aleatorio en los cromosomas de los padres 
-    # y combina las partes antes y después de ese punto para producir los hijos.
+    """
+    Cruce de dos padres para crear un hijo, mediante un punto de corte aleatorio.
 
-    # Seleccionar un punto de corte aleatorio, tanto en el eje x como en el y
+    :param parent1: matriz bidimensional de valores de RoomsTypes.
+    :param parent2: matriz bidimensional de valores de RoomsTypes.
+
+    :return: matriz bidimensional de valores de RoomsTypes.
+    """
     crossover_point_x = random.randint(0, len(parent1[0]) - 1)
     crossover_point_y = random.randint(0, len(parent1) - 1)
 
@@ -242,12 +262,20 @@ def crossover(parent1: list[list[RoomsTypes]], parent2: list[list[RoomsTypes]]) 
                 child[y][x] = parent1[y][x]
             else:
                 child[y][x] = parent2[y][x]
-    
-    #child = comprobaciones.fix_special_rooms(child)
 
     return child
 
 def mutate(rooms: list[list[RoomsTypes]], mutation_prob: float, mutation_rate: float) -> list[list[RoomsTypes]]:
+    """
+    Mutación de habitaciones. Cambia aleatoriamente el tipo de habitación en una fracción de las habitaciones.
+
+    :param rooms: matriz bidimensional de valores de RoomsTypes.
+    :param mutation_prob: probabilidad de mutación.
+    :param mutation_rate: tasa de mutación.
+
+    :return: matriz bidimensional de valores de RoomsTypes.
+    """
+
     mutated_rooms = [row[:] for row in rooms]   # Copiar la matriz de habitaciones
 
     # individuos a mutar
@@ -263,7 +291,33 @@ def mutate(rooms: list[list[RoomsTypes]], mutation_prob: float, mutation_rate: f
     
     return mutated_rooms
 
+def select_parents_baker(population, fitness_scores):
+    """
+    Selección de padres mediante el método de la ruleta de Baker.
+
+    :param population: población de individuos.
+    :param fitness_scores: puntuaciones de aptitud de los individuos.
+
+    :return: dos padres seleccionados.
+    """
+    total_fitness = sum(score for _, score in fitness_scores)
+    normalized_weights = [score / total_fitness for _, score in fitness_scores]
+    parents = random.choices(population, weights=normalized_weights, k=2)
+    return parents
+
 def steady_state_genetic_algorithm(population_size: int, map_width: int, map_height: int, room_numbers: tuple[int,int], generations: int) -> list[list[RoomsTypes]]:
+    """
+    Algoritmo genético de estado estable.
+
+    :param population_size: tamaño de la población.
+    :param map_width: ancho del piso.
+    :param map_height: altura del piso.
+    :param room_numbers: rango de número de habitaciones.
+    :param generations: número de generaciones.
+
+    :return: matriz bidimensional de valores de RoomsTypes.
+    """
+    
     population = generate_initial_population(population_size, map_width, map_height, room_numbers[0])
     for _ in range(generations):
         fitness_scores = [(individual, fitness(individual, room_numbers)) for individual in population]
@@ -280,13 +334,19 @@ def steady_state_genetic_algorithm(population_size: int, map_width: int, map_hei
 
     return max(population, key=lambda individual: fitness(individual, room_numbers))
 
-def select_parents_baker(population, fitness_scores):
-    total_fitness = sum(score for _, score in fitness_scores)
-    normalized_weights = [score / total_fitness for _, score in fitness_scores]
-    parents = random.choices(population, weights=normalized_weights, k=2)
-    return parents
-
 def generational_genetic_algorithm(population_size: int, map_width: int, map_height: int, room_numbers: tuple[int,int], generations: int) -> list[list[RoomsTypes]]:
+    """
+    Algoritmo genético generacional.
+
+    :param population_size: tamaño de la población.
+    :param map_width: ancho del piso.
+    :param map_height: altura del piso.
+    :param room_numbers: rango de número de habitaciones.
+    :param generations: número de generaciones.
+
+    :return: matriz bidimensional de valores de RoomsTypes.
+    """
+    
     population = generate_initial_population(population_size, map_width, map_height, room_numbers[0])
     for _ in range(generations):
         fitness_scores = [(individual, fitness(individual, room_numbers)) for individual in population]

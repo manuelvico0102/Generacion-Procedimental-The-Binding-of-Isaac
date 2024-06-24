@@ -158,55 +158,7 @@ class Room(RoomTextures):
          """
         centerx, centery = consts.ROOM_WIDTH // 2, consts.ROOM_HEIGHT // 2
 
-        if self.room_type == consts.RoomsTypes.SPAWN:
-            return
-
-        if self.room_type == consts.RoomsTypes.BOSS and self.floor_type == consts.FloorsTypes.CATACOMBS:
-            Teratoma((6, 3), 40, self.paths, self.main_hero,
-                     (self.movement_borders, self.doors), self.hp_bar_group, 1, 2,
-                     self.bosses, self.blowable)
-
-        if self.room_type == consts.RoomsTypes.BOSS and self.floor_type == consts.FloorsTypes.BASEMENT:
-            Fistula((6, 3), 40, self.paths, self.main_hero,
-                    (self.movement_borders, self.doors), self.hp_bar_group, 1, 2,
-                    self.bosses, self.blowable)
-
-        if self.room_type == consts.RoomsTypes.BOSS and self.floor_type == consts.FloorsTypes.DEPTHS:
-            Duke((6, 3), self.paths, self.main_hero,
-                 (self.movement_borders, self.doors, self.main_hero_group),
-                 (self.main_hero_group, self.colliadble_group), self.hp_bar_group,
-                 1.4, self.bosses, self.blowable)
-
-        if self.room_type == consts.RoomsTypes.BOSS and self.floor_type == consts.FloorsTypes.CAVES:
-            Envy((6, 3), 40, self.paths, self.main_hero,
-                 (self.movement_borders, self.doors), self.hp_bar_group, 1, 2,
-                 self.bosses, self.blowable)
-
-        if self.room_type == consts.RoomsTypes.BOSS and self.floor_type == consts.FloorsTypes.WOMB:
-            Pudge((6, 3), 40, self.paths, self.main_hero,
-                  (self.movement_borders, self.doors), self.hp_bar_group, 1, 2,
-                  self.bosses, self.blowable)
-
-        if self.room_type == consts.RoomsTypes.BOSS:
-            self.is_friendly = False
-            Trapdoor(self.colliadble_group, self.doors)
-            return
-
-        if self.room_type == consts.RoomsTypes.TREASURE:
-            pedestal = Pedestal((centerx, centery),
-                                self.obstacles, self.colliadble_group, self.other)
-            pedestal.set_artifact(random.choice(Room.artifacts), self.artifacts_group)
-            return
-
-        if self.room_type == consts.RoomsTypes.SHOP:
-            for i, items in zip(range(-2, 2 + 1, 2), (Room.artifacts, Room.loot, Room.loot)):
-                ShopItem((centerx + i, centery), random.choice(items), self.other)
-            return
-
-        if self.room_type == consts.RoomsTypes.SECRET:
-            for i in range(-2, 2 + 1, 2):
-                self.set_pickable((centerx + i, centery))
-            return
+        self.generate_special_rooms(centerx, centery)
 
         enemies = 0
         max_enemies = 9
@@ -541,7 +493,11 @@ class Room(RoomTextures):
             PickKey(xy_pos, (self.colliadble_group, self.movement_borders, self.other), self.other)
 
     
-    def generar_habitaciones_especiales(self):
+    def generate_special_rooms(self):
+        """
+        Generación de habitaciones especiales.
+        """
+
         centerx, centery = consts.ROOM_WIDTH // 2, consts.ROOM_HEIGHT // 2
 
         if self.room_type == consts.RoomsTypes.SPAWN:
@@ -600,8 +556,12 @@ class Room(RoomTextures):
             return
         
     def setup_entities_ac(self):
+        """
+            Generación de entidades haciendo uso de un autómata celular.
+        """
+
         if(self.room_type != consts.RoomsTypes.DEFAULT):
-            self.generar_habitaciones_especiales()
+            self.generate_special_rooms()
         else:
             room = cellular_automatan()
             centerx, centery = consts.ROOM_WIDTH // 2, consts.ROOM_HEIGHT // 2

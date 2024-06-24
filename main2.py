@@ -1,5 +1,6 @@
 import pygame as pg
 from src import consts
+import argparse
 
 pg.init()
 pg.font.init()
@@ -13,10 +14,9 @@ from src.modules.levels.LevelGenerator import main as generate_level
 from src.modules.levels.LevelGenerator import main as generate_initial_population
 import src.modules.levels.algoritmoGenetico as ag
 
-def main():
+def main(algorithm):
     name_hero = "isaac"
     main_hero = Player(name_hero)
-    algorithm = 0                   # 0 para algoritmo genético de estado estable, 1 para algoritmo genético generacional
     
     if algorithm == 0:
         print("Algoritmo genético de estado estacionario")
@@ -74,5 +74,10 @@ def main():
     pg.quit()
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Ejecución del juego con algoritmo genético.')
+    parser.add_argument('--algorithm', type=int, default=0, choices=[0, 1],
+                        help='Especifica el algoritmo a utilizar: 0 para estado estacionario, 1 para generacional')
+
+    args = parser.parse_args()
+    main(args.algorithm)
     
